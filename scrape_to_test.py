@@ -14,6 +14,7 @@ from bs4 import BeautifulSoup
 #		- One table for class data. i.e full course name, teacher, schedule
 # 		- Another for results of each day with pk references. i.e num seats for the day
 #	- logging is important, holes is data is no bueno~
+#	- expose via api
 #
 # - Any other data we should get to visualize later? no feature creep pls.
 
