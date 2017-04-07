@@ -1,6 +1,9 @@
 # wip  
   
-TODO list in scrape_to_test.py  
+TODO:  
+automate data scraping  
+make api  
+visualize data  
   
 #### Getting Started  
 need python 3 + pip  
