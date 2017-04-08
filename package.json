@@ -4,7 +4,7 @@
   "description": "upper level registration data",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,8 @@
   "homepage": "https://github.com/ChristianNguyendinh/cs-upper-level-registration-stats#readme",
   "dependencies": {
     "express": "^4.15.2"
+  },
+  "engines": {
+    "node": "6.7.0"
   }
 }
