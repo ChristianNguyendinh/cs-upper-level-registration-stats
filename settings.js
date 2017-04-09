@@ -1,0 +1,1 @@
+exports.email = {name: "XXX@gmail.com", pass: "XXX"};
