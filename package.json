@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/ChristianNguyendinh/cs-upper-level-registration-stats#readme",
   "dependencies": {
-    "express": "^4.15.2"
+    "cron": "^1.2.1",
+    "express": "^4.15.2",
+    "nodemailer": "^4.0.0"
   },
   "engines": {
     "node": "6.7.0"
