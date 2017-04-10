@@ -4,6 +4,45 @@ var CronJob = require('cron').CronJob;
 var PythonShell = require('python-shell');
 var nodemailer = require('nodemailer');
 var email = require('./settings.js').email;
+var path = require('path');
+var request = require('request');
+var bodyparser = require('body-parser');
+var sqlite3 = require('sqlite3').verbose();
+var db = new sqlite3.Database('manual/courses.db');
+
+server.use(bodyparser.json());
+server.use(bodyparser.urlencoded({
+    extended: true
+}));
+
+server.set('view engine', 'ejs');
+server.use(express.static(path.join(__dirname, 'public')));
+server.use('/scripts', express.static(path.join(__dirname, '/node_modules/chart.js/dist/')));
+
+server.get('/index', function(req, res) {
+    res.render('index', { name: req.params.name });
+});
+
+server.get('/api/stats', function(req, res) {
+	let data = {};
+    db.serialize(() => {
+        db.each('SELECT * FROM test', (err, row) => {
+            if (!err) {
+            	//course|section|open|total|waitlist|date
+                if (!data.hasOwnProperty(row.course))
+                	data[row.course] = [];
+
+                let datapoint = {section: row.section, open: row.open, total: row.total, wait: row.waitlist, date: row.date}
+                data[row.course].push(datapoint);
+            } else {
+                console.log(err)
+            }
+        }, (err, rowc) => { 
+        	//console.log(data);
+            res.json(data);
+        });
+    });
+});
 
 var transporter = nodemailer.createTransport({
     service: 'gmail',
