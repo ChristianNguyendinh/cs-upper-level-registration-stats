@@ -24,13 +24,13 @@ server.get('/index', function(req, res) {
 });
 
 server.get('/api/stats', function(req, res) {
-	let data = {};
+    let data = {};
     db.serialize(() => {
         db.each('SELECT * FROM test', (err, row) => {
             if (!err) {
-            	//course|section|open|total|waitlist|date
+                //course|section|open|total|waitlist|date
                 if (!data.hasOwnProperty(row.course))
-                	data[row.course] = [];
+                    data[row.course] = [];
 
                 let datapoint = {section: row.section, open: row.open, total: row.total, wait: row.waitlist, date: row.date}
                 data[row.course].push(datapoint);
@@ -38,7 +38,7 @@ server.get('/api/stats', function(req, res) {
                 console.log(err)
             }
         }, (err, rowc) => { 
-        	//console.log(data);
+            //console.log(data);
             res.json(data);
         });
     });
@@ -60,34 +60,34 @@ let mailOptions = {
 };
 
 var job = new CronJob({
-	cronTime: '* 55 23 * * *',
-	onTick: function() {
-		let m = "";
-		// for now use the python script until someone writes it in node
-		PythonShell.run('manual/scrape_to_test.py', function (err) {
-			if (err) throw err;
-			mailOptions.text = m;
-			transporter.sendMail(mailOptions, function (err, info) {
-				if (err) {
-					return console.log("Error sending message " + err)
-				}
-				console.log("Data email sent");
-			});
-		}).on('message', function (message) {
-			m += message + "\n";
-		});
-	},
-	start: false,
-	timeZone: 'America/New_York'
+    cronTime: '* 55 23 * * *',
+    onTick: function() {
+        let m = "";
+        // for now use the python script until someone writes it in node
+        PythonShell.run('manual/scrape_to_test.py', function (err) {
+            if (err) throw err;
+            mailOptions.text = m;
+            transporter.sendMail(mailOptions, function (err, info) {
+                if (err) {
+                    return console.log("Error sending message " + err)
+                }
+                console.log("Data email sent");
+            });
+        }).on('message', function (message) {
+            m += message + "\n";
+        });
+    },
+    start: false,
+    timeZone: 'America/New_York'
 });
 
 server.set('port', (process.env.PORT || 8000));
 
 server.get('/', function(req, res) {
-	res.send("Made it")
+    res.send("Made it")
 })
 
 server.listen(server.get('port'), function() {
-	job.start();
-	console.log('Server running on port ' + server.get('port'));
+    job.start();
+    console.log('Server running on port ' + server.get('port'));
 });
