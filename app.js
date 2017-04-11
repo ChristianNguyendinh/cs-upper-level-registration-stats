@@ -23,6 +23,8 @@ server.get('/index', function(req, res) {
     res.render('index', { name: req.params.name });
 });
 
+// Change to have section object then push to that.
+// temporary until the node scripts are written that use the postgres db. after that query based on parameter class name
 server.get('/api/stats', function(req, res) {
     let data = {};
     db.serialize(() => {
@@ -30,10 +32,13 @@ server.get('/api/stats', function(req, res) {
             if (!err) {
                 //course|section|open|total|waitlist|date
                 if (!data.hasOwnProperty(row.course))
-                    data[row.course] = [];
+                    data[row.course] = {};
 
-                let datapoint = {section: row.section, open: row.open, total: row.total, wait: row.waitlist, date: row.date}
-                data[row.course].push(datapoint);
+                if (!data[row.course].hasOwnProperty(row.section))
+                    data[row.course][row.section] = [];
+
+                let datapoint = {open: row.open, total: row.total, wait: row.waitlist, date: row.date}
+                data[row.course][row.section].push(datapoint);
             } else {
                 console.log(err)
             }

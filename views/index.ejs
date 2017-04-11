@@ -1,18 +1,123 @@
 <!DOCTYPE html>
-<html>
+<html style="width:100%; height:100%">
 <head>
     <% include partials/head.ejs %>
     <script>
-        $.ajax({type: "POST", url: "../api/stats", data: data}).done(function(d) {
-            console.log(d);
-        });
+        /*
+		CMSC411
+		CMSC412
+		CMSC414
+		CMSC417
+		CMSC420
+		CMSC421
+		CMSC422
+		CMSC423
+		CMSC424
+		CMSC426
+		CMSC430
+		CMSC433
+		CMSC434
+		CMSC435
+		CMSC436
+		CMSC451
+		CMSC460
+		CMSC466
+		CMSC474
+        */
     </script>
 </head>
 
-<body>
+<body style="width:100%; height:100%">
     <h1>HELLO</h1>
-    <div id="content">
-
+    <div id="content" style="width:100%; height:100%">
+	    <div style="width: 90%; height: 90%">
+	        <canvas id="myChart"></canvas>
+	    </div>
     </div>
+    <script>
+    	var data;
+
+    	function getPastDates(x) {
+    		var pastDateArr = [];
+    		var d = new Date();
+
+    		pastDateArr.unshift(d.toString().substring(4, 10));
+    		for (var i = 1; i < x; i++) {
+    			d.setDate(d.getDate() - 1);
+    			pastDateArr.unshift(d.toString().substring(4, 10));
+    		}
+    		return pastDateArr;
+    	}
+
+    	function dataToArray(d) {
+    		var dataArr = [];
+
+    		for (var i = 0; i < d.length; i++) {
+    			dataArr.push(d[i]['open']);
+    		}
+    		return dataArr;
+    	}
+
+    	$.ajax({type: "GET", url: "../api/stats"}).done(function(d) {
+            data = d;
+        }).then(function() {
+        	var ctx = document.getElementById("myChart");
+	        myLineChart = new Chart(ctx, {
+	            type: 'line',
+	            data: {
+	                labels: getPastDates(7),
+	                datasets: [
+	                    {
+	                        label: "Seats Open",
+	                        fill: false,
+	                        lineTension: 0.0,
+	                        backgroundColor: "rgba(75,192,192,0.4)",
+	                        borderColor: "rgba(75,192,192,1)",
+	                        borderCapStyle: 'butt',
+	                        borderDash: [],
+	                        borderDashOffset: 0.0,
+	                        borderJoinStyle: 'miter',
+	                        pointBorderColor: "rgba(75,192,192,1)",
+	                        pointBackgroundColor: "#fff",
+	                        pointBorderWidth: 1,
+	                        pointHoverRadius: 5,
+	                        pointHoverBackgroundColor: "rgba(75,192,192,1)",
+	                        pointHoverBorderColor: "rgba(220,220,220,1)",
+	                        pointHoverBorderWidth: 2,
+	                        pointRadius: 1,
+	                        pointHitRadius: 10,
+	                        data: dataToArray(data['CMSC420']['0101']),
+	                        spanGaps: false,
+	                    }
+	                ]
+	            },
+	            options: {
+	                title: {
+	                    display: true,
+	                    text: 'Test Chart'
+	                },
+	                scales: {
+	                    xAxes: [{
+	                        scaleLabel: {
+	                            display: true,
+	                            labelString: "Days ago"
+	                        }
+	                    }],
+	                    yAxes: [{
+	                        scaleLabel: {
+	                            display: true,
+	                            labelString: "Seats Open",
+	                        },
+	                        ticks: {
+	                            suggestedMin: 0,
+	                            suggestedMin: data['CMSC420']['0101']['total'],
+	                        }
+	                    }]
+	                }
+	            }
+	        });
+    	});
+
+    </script>
 </body>
 </html>
