@@ -28,7 +28,7 @@ server.get('/index', function(req, res) {
 server.get('/api/stats', function(req, res) {
     let data = {};
     db.serialize(() => {
-        db.each('SELECT * FROM test', (err, row) => {
+        db.each('SELECT * FROM test1', (err, row) => {
             if (!err) {
                 //course|section|open|total|waitlist|date
                 if (!data.hasOwnProperty(row.course))
