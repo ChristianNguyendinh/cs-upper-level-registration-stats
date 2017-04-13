@@ -20,10 +20,10 @@ server.use(express.static(path.join(__dirname, 'public')));
 server.use('/scripts', express.static(path.join(__dirname, '/node_modules/chart.js/dist/')));
 
 server.get('/index', function(req, res) {
-    res.render('index', { name: req.params.name });
+    res.render('index');
 });
 
-// Change to have section object then push to that.
+// get all data for all classes
 // temporary until the node scripts are written that use the postgres db. after that query based on parameter class name
 server.get('/api/stats', function(req, res) {
     let data = {};
@@ -45,6 +45,72 @@ server.get('/api/stats', function(req, res) {
         }, (err, rowc) => { 
             //console.log(data);
             res.json(data);
+        });
+    });
+});
+
+// get all the data we have stored for a class
+server.get('/api/:name', function(req, res) {
+    let data = {};
+    let courseName = req.params.name.toUpperCase();
+    data[courseName] = {};
+
+    db.serialize(() => {
+        db.each('SELECT * FROM test1 WHERE course = \"' + courseName + '\"', (err, row) => {
+            if (!err) {
+                if (!data[courseName].hasOwnProperty(row.section))
+                    data[courseName][row.section] = [];
+
+                data[courseName][row.section].push({open: row.open, total: row.total, wait: row.waitlist, date: row.date});
+            } else {
+                console.log(err)
+            }
+        }, (err, rowc) => { 
+            if (err || rowc == 0)
+                res.json({error: {type: 'courseNotFound', message: 'course ' + courseName + ' not found!', trace: err}});
+            else
+                res.json(data);
+        });
+    });
+});
+
+// get info about a class for the most recent day of data added
+server.get('/api/recent/:name', function(req, res) {
+    let data = {};
+    let courseName = req.params.name.toUpperCase();
+    let rDate = new Date(0);
+    let dateString = "";
+
+    db.serialize(() => {
+        db.each('SELECT DISTINCT date FROM test1 WHERE course = \"' + courseName + '\"', (err, row) => {
+            if (!err) {
+                let queryDate = new Date(row.date);
+                if (queryDate > rDate) {
+                    rDate = queryDate;
+                    dateString = row.date;
+                }
+
+            } else {
+                console.log(err)
+            }
+        }, (err, rowc) => { 
+            if (err || rowc == 0)
+                res.json({error: {type: 'courseOrDateNotFound', message: 'course ' + courseName + ' date went wrong!', trace: err}});
+            else {
+                db.each('SELECT * FROM test1 WHERE course = \"' + courseName + '\" AND date = \"' + dateString + '\"', (err, row) => {
+                    if (!err) 
+                        data[row.section] = {open: row.open, total: row.total, wait: row.waitlist, date: row.date};
+                    else
+                        console.log(err);
+                }, (err, rowc) => { 
+                    if (err || rowc == 0)
+                        res.json({error: {type: 'courseNotFound', message: 'course ' + courseName + ' not found! ', trace: err}});
+                    else {
+                        data['date'] = dateString;
+                        res.json(data);
+                    }
+                });
+            }
         });
     });
 });
