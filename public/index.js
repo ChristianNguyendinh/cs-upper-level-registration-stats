@@ -82,9 +82,9 @@ function generateOptions(courseName) {
 function getPastDates(courseName) {
     var pastDateArr = [];
     // may need to changed to a passed in date?
-    var d = new Date();
+    // hardcode for now :(
+    var d = new Date("4-12-17");
     // yea we need to set this to the greatest date passed in and stuff
-    d.setDate(d.getDate() - 1);
     // get # of days of data returned
     var numDays = data[courseName][Object.keys(data[courseName])[0]].length;
 
