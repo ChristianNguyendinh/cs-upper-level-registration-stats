@@ -1,22 +1,31 @@
 var data;
 
-function genDataProperties(data, sectionName) {
+var colorIndex = 0;
+var colors = [
+    {color: "blue", rgb: "70,200,245"},
+    {color: "red", rgb: "245,90,70"},
+    {color: "green", rgb: "66,245,110"},
+    {color: "purple", rgb: "66,245,110"},
+    {color: "yellow", rgb: "230,245,70"},
+];
+
+function genDataProperties(data, sectionName, colour) {
     return {
         label: sectionName + " Seats Open",
         fill: false,
         lineTension: 0.0,
-        backgroundColor: "rgba(75,192,192,0.4)",
-        borderColor: "rgba(75,192,192,1)",
+        backgroundColor: "rgba(" + colour.rgb + ",0.4)",
+        borderColor: "rgba(" + colour.rgb + ",1)",
         borderCapStyle: 'butt',
         borderDash: [],
         borderDashOffset: 0.0,
         borderJoinStyle: 'miter',
-        pointBorderColor: "rgba(75,192,192,1)",
+        pointBorderColor: "rgba(" + colour.rgb + ",1)",
         pointBackgroundColor: "#fff",
         pointBorderWidth: 1,
         pointHoverRadius: 5,
-        pointHoverBackgroundColor: "rgba(75,192,192,1)",
-        pointHoverBorderColor: "rgba(220,220,220,1)",
+        pointHoverBackgroundColor: "rgba(" + colour.rgb + ",1)",
+        pointHoverBorderColor: "rgba(" + colour.rgb + ",1)",
         pointHoverBorderWidth: 2,
         pointRadius: 1,
         pointHitRadius: 10,
@@ -27,8 +36,10 @@ function genDataProperties(data, sectionName) {
 
 function generateDataset(courseName) {
     var ds = [];
+    colorIndex = 0;
+
     for (var section in data[courseName]) {
-        ds.push(genDataProperties(data[courseName][section], section));
+        ds.push(genDataProperties(data[courseName][section], section, colors[colorIndex++]));
     }
     return ds;
 }
