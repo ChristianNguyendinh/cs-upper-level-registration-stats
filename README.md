@@ -4,6 +4,7 @@ TODO:
 visualize data  
 collect data into heroku postgres  
 change from using the manual python scripts with the sqlitedb to use the automated node script data from heroku postgres  
+    - script will : scrape data umd for specified classes > connect to postgresDB and store the data > modify the existing email function to return the data
   
 #### Getting Started  
 

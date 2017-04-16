@@ -72,7 +72,7 @@ function generateOptions(courseName) {
                 },
                 ticks: {
                     suggestedMin: 0,
-                    suggestedMin: getMaxTotal(courseName),
+                    suggestedMax: getMaxTotal(courseName),
                 }
             }]
         }
@@ -81,12 +81,8 @@ function generateOptions(courseName) {
                 
 function getPastDates(courseName) {
     var pastDateArr = [];
-    // may need to changed to a passed in date?
-    // hardcode for now :(
-    var d = new Date("4-12-17");
-    // yea we need to set this to the greatest date passed in and stuff
-    // get # of days of data returned
     var numDays = data[courseName][Object.keys(data[courseName])[0]].length;
+    var d = new Date(data[courseName][Object.keys(data[courseName])[0]][numDays - 1]['date']);
 
     pastDateArr.unshift(d.toString().substring(4, 10));
     for (var i = 1; i < numDays; i++) {
@@ -121,6 +117,7 @@ function dataToArray(d) {
 $.ajax({type: "GET", url: "../api/stats"}).done(function(d) {
     data = d;
 }).then(function() {
+
     for (var course in data) {
         if (course != "course") {
             var ele = document.createElement('div');
