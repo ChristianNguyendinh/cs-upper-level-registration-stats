@@ -1,10 +1,10 @@
 ## wip  
   
 TODO:  
-visualize data  
-collect data into heroku postgres  
-change from using the manual python scripts with the sqlitedb to use the automated node script data from heroku postgres  
-    - script will : scrape data umd for specified classes > connect to postgresDB and store the data > modify the existing email function to return the data
+visualize data - add stuff with d3?  
+collect data into heroku postgres - see issue created  
+update frontend to have users choose class stats they want to see  
+prepare for next semester  
   
 #### Getting Started  
 
