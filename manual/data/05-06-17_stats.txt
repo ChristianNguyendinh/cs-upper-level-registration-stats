@@ -1,0 +1,221 @@
+CMSC411
+---------------
+
+Section: 0101
+Total Seats: 80
+Open Seats: 0
+Waitlist: 28
+
+---------------
+CMSC412
+---------------
+
+Section: 0101
+Total Seats: 25
+Open Seats: 0
+Waitlist: 4
+
+Section: 0102
+Total Seats: 25
+Open Seats: 0
+Waitlist: 6
+
+---------------
+CMSC414
+---------------
+
+Section: 0101
+Total Seats: 50
+Open Seats: 0
+Waitlist: 29
+
+Section: 0201
+Total Seats: 80
+Open Seats: 0
+Waitlist: 20
+
+Section: 0301
+Total Seats: 75
+Open Seats: 0
+Waitlist: 17
+
+---------------
+CMSC417
+---------------
+
+Section: 0101
+Total Seats: 50
+Open Seats: 0
+Waitlist: 14
+
+Section: 0201
+Total Seats: 40
+Open Seats: 0
+Waitlist: 11
+
+---------------
+CMSC420
+---------------
+
+Section: 0101
+Total Seats: 80
+Open Seats: 0
+Waitlist: 40
+
+Section: 0201
+Total Seats: 50
+Open Seats: 0
+Waitlist: 43
+
+Section: 0301
+Total Seats: 50
+Open Seats: 0
+Waitlist: 22
+
+---------------
+CMSC421
+---------------
+
+Section: 0101
+Total Seats: 80
+Open Seats: 0
+Waitlist: 12
+
+---------------
+CMSC422
+---------------
+
+Section: 0101
+Total Seats: 80
+Open Seats: 0
+Waitlist: 28
+
+Section: 0201
+Total Seats: 80
+Open Seats: 0
+Waitlist: 17
+
+---------------
+CMSC423
+---------------
+
+Section: 0101
+Total Seats: 70
+Open Seats: 0
+Waitlist: 3
+
+---------------
+CMSC424
+---------------
+
+Section: 0101
+Total Seats: 80
+Open Seats: 33
+Waitlist: 0
+
+Section: 0201
+Total Seats: 80
+Open Seats: 0
+Waitlist: 10
+
+---------------
+CMSC426
+---------------
+
+Section: 0101
+Total Seats: 50
+Open Seats: 0
+Waitlist: 12
+
+---------------
+CMSC430
+---------------
+
+Section: 0101
+Total Seats: 50
+Open Seats: 0
+Waitlist: 4
+
+---------------
+CMSC433
+---------------
+
+Section: 0101
+Total Seats: 80
+Open Seats: 0
+Waitlist: 27
+
+---------------
+CMSC434
+---------------
+
+Section: 0101
+Total Seats: 47
+Open Seats: 0
+Waitlist: 29
+
+---------------
+CMSC435
+---------------
+
+Section: 0101
+Total Seats: 48
+Open Seats: 0
+Waitlist: 11
+
+---------------
+CMSC436
+---------------
+
+Section: 0101
+Total Seats: 80
+Open Seats: 0
+Waitlist: 17
+
+---------------
+CMSC451
+---------------
+
+Section: 0101
+Total Seats: 80
+Open Seats: 0
+Waitlist: 16
+
+Section: 0201
+Total Seats: 50
+Open Seats: 18
+Waitlist: 0
+
+---------------
+CMSC460
+---------------
+
+Section: 0101
+Total Seats: 20
+Open Seats: 0
+Waitlist: 11
+
+Section: 0201
+Total Seats: 27
+Open Seats: 0
+Waitlist: 17
+
+---------------
+CMSC466
+---------------
+
+Section: 0101
+Total Seats: 27
+Open Seats: 0
+Waitlist: 1
+
+---------------
+CMSC474
+---------------
+
+Section: 0101
+Total Seats: 50
+Open Seats: 23
+Waitlist: 0
+
+---------------
