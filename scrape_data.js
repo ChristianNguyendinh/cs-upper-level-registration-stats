@@ -1,3 +1,4 @@
+const fs = require('fs');
 const request = require('request');
 const cheerio = require('cheerio');
 const MANUAL_MODE = process.argv[2];
@@ -67,14 +68,14 @@ function collectData() {
             if (MANUAL_MODE) {
                 console.log(dataString);
             } else {
-                loadData(dataObject, totalSections);
+                loadData(dataObject, totalSections, dataString);
             }
 
         }
     );
 }
 
-function loadData(dataObj, totalSections) {
+function loadData(dataObj, totalSections, dataString) {
     let currDate = new Date();
     let dateString = "";
     dateString += currDate.getMonth() < 10 ? "0" + currDate.getMonth().toString() : currDate.getMonth().toString();
@@ -88,7 +89,6 @@ function loadData(dataObj, totalSections) {
 
         Object.keys(dataObj).forEach(function(course) {
             dataObj[course].forEach(function(section) {
-                console.log("in prog")
                 // console.log(course + " " + section.section + " " + section.total + " " + section.open + " " + section.waitlist);
                 client.query('INSERT INTO courses (course, section, open, total, waitlist, date) VALUES ($1, $2, $3, $4, $5, $6);',
                     [course, section.section, section.open, section.total, section.waitlist, dateString])
@@ -96,16 +96,28 @@ function loadData(dataObj, totalSections) {
                     curr++;
                     done();
                     if (curr >= totalSections) {
-                        cleanup();
+                        saveLogs(dataString, dateString);
                     }
                 });
             });
         });
-        console.log("finish");
     });
 }
 
+function saveLogs(dataString, date) {
+    fs.writeFile("./logs/" + date + "_stats.txt", dataString, function(err) {
+        if (err) {
+            return console.error(err);
+        }
+
+        console.log("Log Saved!");
+    });
+
+    cleanup();
+}
+
 function cleanup() {
+    console.log("Data Collected!");
     pg.end();
 }
 
