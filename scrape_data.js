@@ -105,7 +105,11 @@ function loadData(dataObj, totalSections) {
     });
 }
 
-function run() {
+function cleanup() {
+    pg.end();
+}
+
+module.exports = function run() {
     if (process.argv.length <= 3) {
         if (MANUAL_MODE && (MANUAL_MODE != "-p" && MANUAL_MODE != "--print")) {
             console.error("Optional 1 argument of -p or --print");
@@ -117,13 +121,6 @@ function run() {
 
     collectData();
 }
-
-function cleanup() {
-    pg.end();
-    process.exit(1);
-}
-
-run();
 
 
 
