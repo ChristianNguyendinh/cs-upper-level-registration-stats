@@ -1,8 +1,11 @@
 const request = require('request');
 const cheerio = require('cheerio');
+const MANUAL_MODE = process.argv[2];
+const pg = require('pg');
+const conString = process.env.DATABASE_URL || 'postgres://localhost:5432/christian';
 
 // Srape the data, print out optionally, TODO: Save in DB and email
-function scrape() {
+function collectData() {
     var basic_upper_levels = ["CMSC411", "CMSC412", "CMSC414", "CMSC417", 
         "CMSC420", "CMSC421", "CMSC422", "CMSC423", "CMSC424", 
         "CMSC426", "CMSC430", "CMSC433", "CMSC434", "CMSC435", 
@@ -13,6 +16,7 @@ function scrape() {
     var dataString = "";
     // Object representation of data for storage
     var dataObject = {}
+    var totalSections = 0;
 
     // USING THEIR API
     request.get(
@@ -53,6 +57,7 @@ function scrape() {
                     });
 
                     dataObject[courseId].push(sectionObject);
+                    totalSections++;
                 });
 
                 dataString += "---------------\n";
@@ -62,25 +67,63 @@ function scrape() {
             if (MANUAL_MODE) {
                 console.log(dataString);
             } else {
-                console.log(dataObject);
+                loadData(dataObject, totalSections);
             }
 
         }
     );
 }
 
-const MANUAL_MODE = process.argv[2];
+function loadData(dataObj, totalSections) {
+    let currDate = new Date();
+    let dateString = "";
+    dateString += currDate.getMonth() < 10 ? "0" + currDate.getMonth().toString() : currDate.getMonth().toString();
+    dateString += "-" + currDate.getDate().toString();
+    dateString += "-" + currDate.getFullYear().toString();
 
-if (process.argv.length <= 3) {
-    if (MANUAL_MODE && (MANUAL_MODE != "-p" && MANUAL_MODE != "--print")) {
-        console.error("Optional 1 argument of -p or --print");
-        process.exit(4);
-    }
-} else {
-    console.error("Too many arguments. Expected 1 (-p or --print) or 0")
+    let curr = 0;
+
+    pg.connect(conString, (err, client, done) => {
+        if (err) return console.error(err);
+
+        Object.keys(dataObj).forEach(function(course) {
+            dataObj[course].forEach(function(section) {
+                console.log("in prog")
+                // console.log(course + " " + section.section + " " + section.total + " " + section.open + " " + section.waitlist);
+                client.query('INSERT INTO courses (course, section, open, total, waitlist, date) VALUES ($1, $2, $3, $4, $5, $6);',
+                    [course, section.section, section.open, section.total, section.waitlist, dateString])
+                .then(() => {
+                    curr++;
+                    done();
+                    if (curr >= totalSections) {
+                        cleanup();
+                    }
+                });
+            });
+        });
+        console.log("finish");
+    });
 }
 
-scrape();
+function run() {
+    if (process.argv.length <= 3) {
+        if (MANUAL_MODE && (MANUAL_MODE != "-p" && MANUAL_MODE != "--print")) {
+            console.error("Optional 1 argument of -p or --print");
+            process.exit(4);
+        }
+    } else {
+        console.error("Too many arguments. Expected 1 (-p or --print) or 0")
+    }
+
+    collectData();
+}
+
+function cleanup() {
+    pg.end();
+    process.exit(1);
+}
+
+run();
 
 
 
