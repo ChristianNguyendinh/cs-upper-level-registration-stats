@@ -1,21 +1,16 @@
-## wip  
+# UMD CS Upper Level Course Registration Stats  
   
-TODO:  
-visualize data - add stuff with d3?  
-collect data into heroku postgres - see issue created  
-update frontend to have users choose class stats they want to see  
-prepare for next semester  
+Provides basic graph data about how quickly University of Maryland's 400 level CS courses fill up.  
+Still WIP - working on better display + need to update data + deploy  
   
-#### Getting Started  
-
-##### Manual  
-need python 3 + pip  
-(use virtual env prefferably)  
-pip install -r requirements.txt  
-use python scripts to manually extract data into txt > csv > sqlite. pretty gross i kno
+--------------------------    
   
-##### Normal  
-need node 6+  
+### Set Up:  
+need node v6+  
 npm install  
-edit settings if need email automation backup  
-node app.js  
+node app.js
+go to 127.0.0.1:8000/index to view graphs
+
+### TODO:  
+see issues    
+
