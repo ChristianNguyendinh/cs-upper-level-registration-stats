@@ -130,6 +130,5 @@ server.get('/', function(req, res) {
 
 server.listen(server.get('port'), function() {
     job.start();
-    getData();
     console.log('Server running on port ' + server.get('port'));
 });
