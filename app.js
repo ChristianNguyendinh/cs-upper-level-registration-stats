@@ -6,7 +6,7 @@ var path = require('path');
 var request = require('request');
 var bodyparser = require('body-parser');
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('manual/courses.db');
+var db = new sqlite3.Database('data/courses.db');
 
 server.use(bodyparser.json());
 server.use(bodyparser.urlencoded({
