@@ -16,9 +16,15 @@ server.use(bodyparser.urlencoded({
 server.set('view engine', 'ejs');
 server.use(express.static(path.join(__dirname, 'public')));
 server.use('/scripts', express.static(path.join(__dirname, '/node_modules/chart.js/dist/')));
+server.use('/scripts', express.static(path.join(__dirname, '/node_modules/d3/')));
+
 
 server.get('/index', function(req, res) {
     res.render('index');
+});
+
+server.get('/test', function(req, res) {
+    res.render('test');
 });
 
 // get all data for all classes

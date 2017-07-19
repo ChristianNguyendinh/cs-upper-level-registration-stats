@@ -1,0 +1,156 @@
+// initial dataset
+dataObj = {
+    "CMSC412": {
+        "0101": [
+            {
+                "open":"25",
+                "total":"25",
+                "wait":"0",
+                "date":"03-30-17"
+            },
+            {
+                "open":"21",
+                "total":"25",
+                "wait":"0",
+                "date":"03-31-17"
+            },
+            {
+                "open":"15",
+                "total":"25",
+                "wait":"0",
+                "date":"04-01-17"
+            },
+            {
+                "open":"14",
+                "total":"25",
+                "wait":"0",
+                "date":"04-02-17"
+            },
+            {
+                "open":"5",
+                "total":"25",
+                "wait":"0",
+                "date":"04-03-17"
+            }
+        ],
+        "0201": [
+            { 
+                "open":"15",
+                "total":"25",
+                "wait":"0",
+                "date":"03-30-17"
+            },
+            {
+                "open":"10",
+                "total":"25",
+                "wait":"0",
+                "date":"03-31-17"},
+            {
+                "open":"9",
+                "total":"25",
+                "wait":"0",
+                "date":"04-01-17"
+            },
+            {
+                "open":"5",
+                "total":"25",
+                "wait":"0",
+                "date":"04-02-17"
+            },
+            {
+                "open":"2",
+                "total":"25",
+                "wait":"0",
+                "date":"04-03-17"
+            }
+        ]
+    }
+};
+
+//=================================================================
+//=================================================================
+//=================================================================
+
+
+
+var margin = {top: 85, right: 20, bottom: 40, left: 80};
+var width = 1100 - margin.right - margin.left;
+var height = 700 - margin.top - margin.bottom;
+
+// init scales
+var scaleLineX = d3.scalePoint().rangeRound([0, width]);
+var scaleLineY = d3.scaleLinear().rangeRound([height, 0]);
+
+var xAxis = null;
+var yAxis = null;
+
+// Create line function for x,y positions
+var line = d3.line()
+    .x(function(d, i) { return scaleLineX(d.date) })
+    .y(function(d, i) { return scaleLineY(parseInt(d.open)) });
+
+var lineChart = d3.select("#lineChart")
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("viewBox", "0 0 " + (width + margin.left + margin.left) + " " + (height + margin.top + margin.bottom))
+    .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+// call to get data - d3.json() ???
+
+lineChartData = dataObj['CMSC412'];
+var keysObj = Object.keys(lineChartData);
+var colorArray = ["#34c", "#3c4"]
+
+// Set domain for scales
+scaleLineX.domain(lineChartData[keysObj[0]].map(function(d) { return d.date }));
+scaleLineY.domain([0, d3.max(keysObj, 
+    function(d) { 
+        return d3.max(lineChartData[d], function(d1) { return parseInt(d1['open']); });
+    })
+]);
+
+// Create Axes
+xAxis = d3.axisBottom(scaleLineX);
+yAxis = d3.axisLeft(scaleLineY);
+
+// Append the x axis 
+var xObj = lineChart.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+// Append the Y axis
+lineChart.append("g")
+    .attr("class", "y axis")
+    .call(yAxis);
+
+// Title
+lineChart.append("g")
+    .attr("transform", "translate(" + width * 0.3 + ",-25)")
+    .append("text")
+        .html("CMSC412")
+
+// Legend
+
+// Background grid
+
+keysObj.forEach(function(element, index) {
+    // Draw the line
+    lineChart.append("path")
+        .datum(lineChartData[element])
+        .attr("class", "my-line")
+        .attr("d", line)
+        .attr("stroke", colorArray[index]);
+
+    // Draw the dots
+    lineChart.selectAll(".dot-" + element)
+        .data(lineChartData[element])
+        .enter()
+        .append("circle")
+            .attr("r", 5)
+            .attr("cx", function(d, i) { return scaleLineX(d.date) })
+            .attr("cy", function(d, i) { return scaleLineY(d.open) })
+            .attr("fill", colorArray[index])
+            .attr("class", "dot-" + element);
+});
+
