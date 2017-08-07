@@ -104,11 +104,13 @@ var colorArray = ["#34c", "#3c4", "#f00", "#0f0", "#00f", "#ff0", "#0ff", "#f0f"
 
 // Set domain for scales
 scaleLineX.domain(lineChartData[keyArray[0]].map(function(d) { return d.date }));
-scaleLineY.domain([0, d3.max(keyArray, 
+
+var maxY = d3.max(keyArray, 
     function(d) { 
         return d3.max(lineChartData[d], function(d1) { return parseInt(d1['open']); });
-    })
-]);
+    }
+);
+scaleLineY.domain([0, maxY]);
 
 // Create Axes
 xAxis = d3.axisBottom(scaleLineX);
@@ -131,6 +133,25 @@ lineChart.append("g")
     .append("text")
         .html("CMSC412")
 
+// Background grid
+lineChartData[keyArray[0]].forEach(function(day, index) {
+    lineChart.append("line")
+        .attr("x1", scaleLineX(day['date']))
+        .attr("y1", 0)
+        .attr("x2", scaleLineX(day['date']))
+        .attr("y2", height)
+        .attr("stroke", "grey");
+});
+
+scaleLineY.ticks().forEach(function(label, index) {
+    lineChart.append("line")
+        .attr("x1", 0)
+        .attr("y1", scaleLineY(label))
+        .attr("x2", width)
+        .attr("y2", scaleLineY(label))
+        .attr("stroke", "grey");
+})
+
 // Legend
 var legend = lineChart.append("g")
     .attr("transform", "translate(" + width * .8 + ",0)")
@@ -139,9 +160,8 @@ legend.append("rect")
     .attr("width", "15%")
     .attr("height", "15%")
     .attr("stroke", "black")
-    .attr("fill-opacity", "0");
-
-// Background grid
+    .attr("fill", "white");
+    //.attr("fill-opacity", "0");
 
 // Tooltip
 
