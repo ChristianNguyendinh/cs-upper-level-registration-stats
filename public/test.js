@@ -163,8 +163,12 @@ legend.append("rect")
     .attr("fill", "white");
     //.attr("fill-opacity", "0");
 
-// Tooltip
+// Tooltip -- May just need to declare once at the top or sumthing, then reuse for charts
+var tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
 
+// Data Lines
 keyArray.forEach(function(element, index) {
     // Draw the line
     lineChart.append("path")
@@ -178,11 +182,24 @@ keyArray.forEach(function(element, index) {
         .data(lineChartData[element])
         .enter()
         .append("circle")
-            .attr("r", 5)
+            .attr("r", 7)
             .attr("cx", function(d, i) { return scaleLineX(d.date) })
             .attr("cy", function(d, i) { return scaleLineY(d.open) })
             .attr("fill", colorArray[index])
-            .attr("class", "dot-" + element);
+            .attr("class", "dot dot-" + element)
+            .on("mouseover", function(d) {
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", 0.9);
+                tooltip.html("Date: " + d.date + "<br/>" + "Seats Open: <b>" + d.open + "</b>")
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY) + "px")
+            })
+            .on("mouseout", function(d) {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
 
     // add color to legend
     legend.append("rect")
