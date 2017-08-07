@@ -27,6 +27,7 @@ function genChart(data, className) {
     // Make the chart container
     var container = d3.select("body").append("div")
         .attr("class", "chart-container")
+        .style("opacity", 0);
 
     container.append("span")
         .attr("class", "x-button")
@@ -157,5 +158,10 @@ function genChart(data, className) {
             .attr("y", 22 * (index % 4 + 1))
             .html(element)
     });
+
+    container.transition()
+    	.duration(1000)
+    	.style("opacity", 1);
+
 }
 

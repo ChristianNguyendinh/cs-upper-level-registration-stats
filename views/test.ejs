@@ -2,6 +2,7 @@
 <html style="width:100%; height:100%">
 <head>
     <% include partials/head.ejs %>
+    <% include partials/search-bar-head.ejs %>
 
     <style>
         .my-line {
@@ -31,6 +32,7 @@
             position: absolute; 
             right: 10px; 
             top: 0px; 
+            cursor: pointer; 
         }
         .x-button:hover {
             color: gray;
@@ -47,14 +49,58 @@
             -webkit-transition: all 3s;
             -o-transition: all 3s;*/
         }
+
+        .autocomplete-suggestions { 
+            border: 1px solid #000; 
+            background: #fff; 
+            cursor: pointer; 
+            overflow: auto; 
+            max-height: 65%;
+        }
+
+        .autocomplete-suggestion { 
+            border-bottom: 2px solid #aaa; 
+            padding: 10px 5px; 
+            font-size: 2vh; 
+            white-space: nowrap; 
+            overflow: hidden; 
+
+        }
+        .autocomplete-selected { 
+            background: #f54; 
+        }
+
+        .autocomplete-suggestions strong { 
+            font-weight: bold; 
+        }
+
+        #search-box {
+            font-size: 18px;
+            width: 30%;
+            vertical-align: top;
+        }
+
+        #search-button {
+            padding: 0.5% 2%;
+            vertical-align: top;
+        }
     </style>
 </head>
 
 <body style="width:100%; height:100%">
     <h1>HELLO</h1>
 
+    <form id="search-form" onsubmit="onFormSubmit(); return false;" style="text-align:center;">
+        <div style="display: inline-block; width: 100%; height: 100%;">
+            <input type="text" id="search-box" required></input>
+            <button type="submit" class="btn btn-danger" id="search-button">Search</button>
+        </div>
+    </form>
+
     <script type=text/javascript src="test.js"></script>
     <script>
+
+        // remove line chart
         function removeGraph(button) {
             var graph = $(button.parentNode)
             setTimeout(function() {
@@ -64,33 +110,39 @@
             graph.fadeOut(500, function() {
                 graph.css({"visibility": "hidden", "display": "block"}).animate({width:"toggle"}, 500);
             });
-
-            // setTimeout(function() {
-            //     d3.select(button.parentNode).remove();
-            // }, 3001)
-
-            // d3.select(button.parentNode)
-            //     .style("width", 0)
-            //     .style("opacity","0");
-
-            // console.log("im sane")
         }
-        
-        d3.json("/api/course/CMSC420", function(data) {
-            genChart(data['CMSC420'], 'CMSC420');
-        })
 
-        d3.json("/api/course/CMSC411", function(data) {
-            genChart(data['CMSC411'], 'CMSC411');
-        })
+        // create line chart on form submit
+        function onFormSubmit() {
+            var course = $("#search-box").val();
 
-        d3.json("/api/course/CMSC412", function(data) {
-            genChart(data['CMSC412'], 'CMSC412');
-        })
+            d3.json("/api/course/" + course, function(data) {
+                genChart(data[course], course);
+            });
+        }
 
-        d3.json("/api/course/CMSC430", function(data) {
-            genChart(data['CMSC430'], 'CMSC430');
-        })
+        // initialize search box for autocomplete and validation
+        d3.json("/api/courselist", function(data) {
+            var searchBox = $("#search-box");
+
+            searchBox.autocomplete({
+                maxHeight: null,
+                lookup: data,
+                onSelect: function(selection) {
+                    $("#search-box").val(selection['value']);
+                }
+            });
+
+            var regex = ""
+            data.forEach(function(d, i) {
+                if (i == 0)
+                    regex += d['value'];
+                else
+                    regex += "|" + d['value'];
+            });
+
+            searchBox.attr("pattern", regex);
+        });
 
     </script>
 </body>

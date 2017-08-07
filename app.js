@@ -125,7 +125,8 @@ server.get('/api/courselist', function(req, res) {
             if (!err) {
                 // skip the column header
                 if (row.course != "course")
-                    data.push(row.course);
+                    // object with key value so autocomplete library can accept it
+                    data.push({ value: row.course });
             } else {
                 console.log(err)
             }
