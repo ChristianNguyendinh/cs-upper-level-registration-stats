@@ -28,21 +28,21 @@
 
         .x-button {
             font-size: 40px;
-            position:absolute; 
+            position: absolute; 
             right: 10px; 
             top: 0px; 
         }
         .x-button:hover {
-            color:gray;
+            color: gray;
         }
 
         .chart-container {
-            position:relative; 
-            width:45%;
-            float:left; 
-            border:1px solid black; 
+            position: relative; 
+            width: 45%;
+            margin: 2%;
+            float: left; 
+            border: 1px solid black; 
             border-radius: 15px;
-            margin: 0;
             /*-moz-transition: all 3s;
             -webkit-transition: all 3s;
             -o-transition: all 3s;*/
@@ -59,10 +59,10 @@
             var graph = $(button.parentNode)
             setTimeout(function() {
                 graph.remove();
-            }, 1600);
+            }, 2000);
 
             graph.fadeOut(500, function() {
-                graph.css({"visibility": "hidden", "display": "block"}).animate({width:"toggle"}, 1000);
+                graph.css({"visibility": "hidden", "display": "block"}).animate({width:"toggle"}, 500);
             });
 
             // setTimeout(function() {
@@ -75,10 +75,22 @@
 
             // console.log("im sane")
         }
-        genChart();
-        genChart();
-        genChart();
-        genChart();
+        
+        d3.json("/api/course/CMSC420", function(data) {
+            genChart(data['CMSC420'], 'CMSC420');
+        })
+
+        d3.json("/api/course/CMSC411", function(data) {
+            genChart(data['CMSC411'], 'CMSC411');
+        })
+
+        d3.json("/api/course/CMSC412", function(data) {
+            genChart(data['CMSC412'], 'CMSC412');
+        })
+
+        d3.json("/api/course/CMSC430", function(data) {
+            genChart(data['CMSC430'], 'CMSC430');
+        })
 
     </script>
 </body>

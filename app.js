@@ -28,7 +28,6 @@ server.get('/test', function(req, res) {
 });
 
 // get all data for all classes
-// temporary until the node scripts are written that use the postgres db. after that query based on parameter class name
 server.get('/api/stats', function(req, res) {
     let data = {};
     db.serialize(() => {
@@ -54,7 +53,7 @@ server.get('/api/stats', function(req, res) {
 });
 
 // get all the data we have stored for a class
-server.get('/api/:name', function(req, res) {
+server.get('/api/course/:name', function(req, res) {
     let data = {};
     let courseName = req.params.name.toUpperCase();
     data[courseName] = {};
@@ -115,6 +114,24 @@ server.get('/api/recent/:name', function(req, res) {
                     }
                 });
             }
+        });
+    });
+});
+
+server.get('/api/courselist', function(req, res) {
+    let data = [];
+    db.serialize(() => {
+        db.each('SELECT DISTINCT course FROM test1', (err, row) => {
+            if (!err) {
+                // skip the column header
+                if (row.course != "course")
+                    data.push(row.course);
+            } else {
+                console.log(err)
+            }
+        }, (err, rowc) => { 
+            //console.log(data);
+            res.json(data);
         });
     });
 });

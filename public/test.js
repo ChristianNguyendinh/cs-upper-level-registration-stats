@@ -1,80 +1,12 @@
-// initial dataset
-dataObj = {
-    "CMSC412": {
-        "0101": [
-            {
-                "open":"25",
-                "total":"25",
-                "wait":"0",
-                "date":"03-30-17"
-            },
-            {
-                "open":"21",
-                "total":"25",
-                "wait":"0",
-                "date":"03-31-17"
-            },
-            {
-                "open":"15",
-                "total":"25",
-                "wait":"0",
-                "date":"04-01-17"
-            },
-            {
-                "open":"14",
-                "total":"25",
-                "wait":"0",
-                "date":"04-02-17"
-            },
-            {
-                "open":"5",
-                "total":"25",
-                "wait":"0",
-                "date":"04-03-17"
-            }
-        ],
-        "0201": [
-            { 
-                "open":"15",
-                "total":"25",
-                "wait":"0",
-                "date":"03-30-17"
-            },
-            {
-                "open":"10",
-                "total":"25",
-                "wait":"0",
-                "date":"03-31-17"},
-            {
-                "open":"9",
-                "total":"25",
-                "wait":"0",
-                "date":"04-01-17"
-            },
-            {
-                "open":"5",
-                "total":"25",
-                "wait":"0",
-                "date":"04-02-17"
-            },
-            {
-                "open":"2",
-                "total":"25",
-                "wait":"0",
-                "date":"04-03-17"
-            }
-        ]
-    }
-};
+// Shared tooltip
+var tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
 
-//=================================================================
-//=================================================================
-//=================================================================
-
-colors = [["#34c", "#3c4"], ["#f00", "#0f0"], ["#00f", "#ff0"], ["#0ff", "#f0f"]]
-var i = 0;
-// pass in some data eventually
-function genChart() {
+// Generate a chart based on data. Expected data is an object containing a key with each
+// section of a course. Each section key maps to an array containing the seat availability
+// info for that section for a set of days
+function genChart(data, className) {
 
     var margin = {top: 85, right: 20, bottom: 40, left: 80};
     var width = 1100 - margin.right - margin.left;
@@ -108,12 +40,12 @@ function genChart() {
         .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    // call to get data - d3.json() ???
-
-    lineChartData = dataObj['CMSC412'];
+    // use passed in data
+    lineChartData = data;
     var keyArray = Object.keys(lineChartData);
-    var colorArray = colors[i];
-    i++;
+
+    // coloring will prolly change
+    var colorArray = ["#34c", "#3c4", "#f00", "#0f0", "#00f", "#ff0", "#0ff", "#f0f"];
 
     // Set domain for scales
     scaleLineX.domain(lineChartData[keyArray[0]].map(function(d) { return d.date }));
@@ -142,9 +74,10 @@ function genChart() {
 
     // Title
     lineChart.append("g")
-        .attr("transform", "translate(" + width * 0.3 + ",-25)")
+        .attr("transform", "translate(" + width / 2 + ",-25)")
         .append("text")
-            .html("CMSC412")
+            .html(className)
+            .attr("font-size", "25")
 
     // Background grid
     lineChartData[keyArray[0]].forEach(function(day, index) {
@@ -174,12 +107,7 @@ function genChart() {
         .attr("height", "15%")
         .attr("stroke", "black")
         .attr("fill", "white");
-        //.attr("fill-opacity", "0");
-
-    // Tooltip -- May just need to declare once at the top or sumthing, then reuse for charts
-    var tooltip = d3.select("body").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0);
+        //.attr("fill-opacity", "0");    
 
     // Data Lines
     keyArray.forEach(function(element, index) {
