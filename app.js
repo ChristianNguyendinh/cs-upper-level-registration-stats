@@ -119,6 +119,7 @@ server.get('/api/recent/:name', function(req, res) {
     });
 });
 
+// Run scrape data at 11:55pm EST daily
 var job = new CronJob({
     cronTime: '* 55 23 * * *',
     onTick: function() {

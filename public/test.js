@@ -89,6 +89,7 @@ var line = d3.line()
     .x(function(d, i) { return scaleLineX(d.date) })
     .y(function(d, i) { return scaleLineY(parseInt(d.open)) });
 
+// Initialize line chart svg
 var lineChart = d3.select("#lineChart")
     .attr("preserveAspectRatio", "xMinYMin meet")
     .attr("viewBox", "0 0 " + (width + margin.left + margin.left) + " " + (height + margin.top + margin.bottom))
@@ -98,12 +99,12 @@ var lineChart = d3.select("#lineChart")
 // call to get data - d3.json() ???
 
 lineChartData = dataObj['CMSC412'];
-var keysObj = Object.keys(lineChartData);
-var colorArray = ["#34c", "#3c4"]
+var keyArray = Object.keys(lineChartData);
+var colorArray = ["#34c", "#3c4", "#f00", "#0f0", "#00f", "#ff0", "#0ff", "#f0f"]
 
 // Set domain for scales
-scaleLineX.domain(lineChartData[keysObj[0]].map(function(d) { return d.date }));
-scaleLineY.domain([0, d3.max(keysObj, 
+scaleLineX.domain(lineChartData[keyArray[0]].map(function(d) { return d.date }));
+scaleLineY.domain([0, d3.max(keyArray, 
     function(d) { 
         return d3.max(lineChartData[d], function(d1) { return parseInt(d1['open']); });
     })
@@ -131,10 +132,20 @@ lineChart.append("g")
         .html("CMSC412")
 
 // Legend
+var legend = lineChart.append("g")
+    .attr("transform", "translate(" + width * .8 + ",0)")
+
+legend.append("rect")
+    .attr("width", "15%")
+    .attr("height", "15%")
+    .attr("stroke", "black")
+    .attr("fill-opacity", "0");
 
 // Background grid
 
-keysObj.forEach(function(element, index) {
+// Tooltip
+
+keyArray.forEach(function(element, index) {
     // Draw the line
     lineChart.append("path")
         .datum(lineChartData[element])
@@ -152,5 +163,21 @@ keysObj.forEach(function(element, index) {
             .attr("cy", function(d, i) { return scaleLineY(d.open) })
             .attr("fill", colorArray[index])
             .attr("class", "dot-" + element);
+
+    // add color to legend
+    legend.append("rect")
+        .attr("x", index < 4 ? 15 : 95)
+        .attr("y", 22 * (index % 4) + 8)
+        .attr("width", "15px")
+        .attr("height", "15px")
+        .attr("stroke", "black")
+        .attr("fill", colorArray[index]);
+
+    // Add text to legend
+    legend.append("text")
+        .attr("x", index < 4 ? 40 : 120)
+        .attr("y", 22 * (index % 4 + 1))
+        .html(element)
 });
+
 
