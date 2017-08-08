@@ -28,10 +28,10 @@
         }
 
         .x-button {
-            font-size: 40px;
+            font-size: 3vw;
             position: absolute; 
             right: 10px; 
-            top: 0px; 
+            top: -3px; 
             cursor: pointer; 
         }
         .x-button:hover {
@@ -40,7 +40,7 @@
 
         .chart-container {
             position: relative; 
-            width: 45%;
+            /*width: 45%;*/
             margin: 2%;
             float: left; 
             border: 1px solid black; 
@@ -84,12 +84,24 @@
             padding: 0.5% 2%;
             vertical-align: top;
         }
+
+        .layout-btn {
+            border: 1px solid black;
+            margin-left: -5px;
+        }
     </style>
 </head>
 
 <body style="width:100%; height:100%">
     <h1>HELLO</h1>
-
+    <div style="display: inline-block">
+        <button class="layout-btn btn btn-default" id="top-layout-btn" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" onclick="changeLayout(this)">
+            <img src="/img/glyphicon-rows.png" />
+        </button>
+        <button class="layout-btn btn btn-default" id="side-layout-btn" style="border-top-left-radius: 0; border-bottom-left-radius: 0;" onclick="changeLayout(this)">
+            <img src="/img/glyphicon-columns.png" />
+        </button>
+    </div>
     <form id="search-form" onsubmit="onFormSubmit(); return false;" style="text-align:center;">
         <div style="display: inline-block; width: 100%; height: 100%;">
             <input type="text" id="search-box" required></input>
@@ -118,7 +130,25 @@
 
             d3.json("/api/course/" + course, function(data) {
                 genChart(data[course], course);
+                $("#search-box").val("");
             });
+        }
+
+        // change the way the graphs are displayed next to each other
+        function changeLayout(button) {
+            console.log(button.id)
+
+            if (button["id"] == "top-layout-btn") {
+                d3.selectAll(".chart-container")
+                    .transition()
+                    .duration(1000)
+                    .style("width", "90%");
+            } else {
+                d3.selectAll(".chart-container")
+                    .transition()
+                    .duration(1000)
+                    .style("width", "45%");
+            }
         }
 
         // initialize search box for autocomplete and validation

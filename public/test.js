@@ -3,6 +3,25 @@ var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
+// format x axis date tick labels
+function formatTick(d, i, len) {
+	var mod = 0;
+	if (len <= 5) {
+		mod = 0
+	} else if (len <= 40) {
+		mod = 2
+	} else {
+		mod = 5
+	}
+
+	var spl = d.split("-");
+	if (i % mod == 0) {
+		return spl[0] + "/" + spl[1];
+	} else {
+		return ""
+	}
+}
+
 // Generate a chart based on data. Expected data is an object containing a key with each
 // section of a course. Each section key maps to an array containing the seat availability
 // info for that section for a set of days
@@ -27,7 +46,8 @@ function genChart(data, className) {
     // Make the chart container
     var container = d3.select("body").append("div")
         .attr("class", "chart-container")
-        .style("opacity", 0);
+        .style("opacity", 0)
+        .style("width", "45%");
 
     container.append("span")
         .attr("class", "x-button")
@@ -49,7 +69,8 @@ function genChart(data, className) {
     var colorArray = ["#34c", "#3c4", "#f00", "#0f0", "#00f", "#ff0", "#0ff", "#f0f"];
 
     // Set domain for scales
-    scaleLineX.domain(lineChartData[keyArray[0]].map(function(d) { return d.date }));
+    var dates = lineChartData[keyArray[0]].map(function(d) { return d.date });
+    scaleLineX.domain(dates);
 
     var maxY = d3.max(keyArray, 
         function(d) { 
@@ -59,26 +80,28 @@ function genChart(data, className) {
     scaleLineY.domain([0, maxY]);
 
     // Create Axes
-    xAxis = d3.axisBottom(scaleLineX);
+    xAxis = d3.axisBottom(scaleLineX).tickFormat(function(d, i) { return formatTick(d, i, dates.length); });
     yAxis = d3.axisLeft(scaleLineY);
 
     // Append the x axis 
     var xObj = lineChart.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
+        .style("font-size", "20px")
         .call(xAxis);
 
     // Append the Y axis
     lineChart.append("g")
         .attr("class", "y axis")
+        .style("font-size", "20px")
         .call(yAxis);
 
     // Title
     lineChart.append("g")
-        .attr("transform", "translate(" + width / 2 + ",-25)")
+        .attr("transform", "translate(" + ((width / 2.5)) + ",-30)")
         .append("text")
-            .html(className)
-            .attr("font-size", "25")
+            .html(className.replace("CMSC", "CMSC-"))
+            .attr("font-size", "40")
 
     // Background grid
     lineChartData[keyArray[0]].forEach(function(day, index) {
