@@ -77,6 +77,30 @@ server.get('/api/course/:name', function(req, res) {
     });
 });
 
+// get data for a course, within a time range
+server.get('/api/:course/((\\d\\d\-\\d\\d\-\\d\\d\_\\d\\d\-\\d\\d\-\\d\\d))', function(req, res) {
+
+    var split = req.params['0'].split("_");
+    var startDate = split[0];
+    var endDate = split[1];
+    var courseName = req.params['course'];
+
+    let data = {};
+    data[courseName] = {};
+
+    db.serialize(() => {
+        db.each('SELECT * FROM test1 WHERE course = \"' + courseName + '\" AND date >= \"' + startDate + '\" AND date <= \"' + endDate + '\"' , (err, row) => {
+            if (!data[courseName].hasOwnProperty(row.section))
+                data[courseName][row.section] = [];
+
+            data[courseName][row.section].push({open: row.open, total: row.total, wait: row.waitlist, date: row.date});
+        
+        }, (err, rowc) => { 
+            res.json(data);
+        });
+    });
+});
+
 // get info about a class for the most recent day of data added
 server.get('/api/recent/:name', function(req, res) {
     let data = {};
@@ -118,6 +142,7 @@ server.get('/api/recent/:name', function(req, res) {
     });
 });
 
+// send a list of courses we have data for
 server.get('/api/courselist', function(req, res) {
     let data = [];
     db.serialize(() => {

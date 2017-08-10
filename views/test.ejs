@@ -93,7 +93,19 @@
 </head>
 
 <body style="width:100%; height:100%">
-    <h1>HELLO</h1>
+    <form id="time-form" onsubmit="onTimeChange(); return false;">
+        <div style="width: 100%; height: 100%; text-align: center;">
+            <div flo>
+                From:
+                <input type="date" id="start-time" required></input>
+            </div>
+            <div>
+                To:  
+                <input type="date" id="end-time" required></input>
+            </div>
+            <button type="submit" class="btn btn-danger" id="time-button">Refresh</button>
+        </div>
+    </form>
     <div style="display: inline-block">
         <button class="layout-btn btn btn-default" id="top-layout-btn" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" onclick="changeLayout(this)">
             <img src="/img/glyphicon-rows.png" />
@@ -102,15 +114,21 @@
             <img src="/img/glyphicon-columns.png" />
         </button>
     </div>
-    <form id="search-form" onsubmit="onFormSubmit(); return false;" style="text-align:center;">
+    <form id="search-form" onsubmit="onCourseSearch(); return false;" style="text-align:center;">
         <div style="display: inline-block; width: 100%; height: 100%;">
             <input type="text" id="search-box" required></input>
             <button type="submit" class="btn btn-danger" id="search-button">Search</button>
         </div>
     </form>
+    <h3 id="info-title"></h3>
+
 
     <script type=text/javascript src="test.js"></script>
     <script>
+
+        var startDate;
+        var endDate;
+        var searchedCourses = new Set();
 
         // remove line chart
         function removeGraph(button) {
@@ -119,14 +137,17 @@
                 graph.remove();
             }, 2000);
 
+            searchedCourses.delete(graph.attr("class").substring(16));
+
             graph.fadeOut(500, function() {
                 graph.css({"visibility": "hidden", "display": "block"}).animate({width:"toggle"}, 500);
             });
         }
 
         // create line chart on form submit
-        function onFormSubmit() {
+        function onCourseSearch() {
             var course = $("#search-box").val();
+            searchedCourses.add(course);
 
             d3.json("/api/course/" + course, function(data) {
                 genChart(data[course], course);
@@ -134,9 +155,31 @@
             });
         }
 
+        // Update the time interval
+        function onTimeChange() {
+            var startVal = $("#start-time").val();
+            var endVal = $("#end-time").val();
+
+            startDate = startVal.substring(5) + "-" + startVal.substring(2, 4);
+            endDate = endVal.substring(5) + "-" + endVal.substring(2, 4);
+
+            $("#info-title").html("Showing Data for: " + startDate + " to " + endDate);
+
+            // date objects dont convert str to date x browser well, so just use strings
+            var dateString = startDate + "_" + endDate;
+
+            for (var course of searchedCourses) {
+                d3.json("/api/" + course + "/" + dateString, function(data) {
+                    // need a new variable because variable 'course' will be overriden one loop moves
+                    // while this function is still asnyc running
+                    var courseName = Object.keys(data)[0];
+                    updateChart(data[courseName], courseName);
+                });
+            }
+        }
+
         // change the way the graphs are displayed next to each other
         function changeLayout(button) {
-            console.log(button.id)
 
             if (button["id"] == "top-layout-btn") {
                 d3.selectAll(".chart-container")
