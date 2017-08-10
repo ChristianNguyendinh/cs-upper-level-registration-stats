@@ -89,11 +89,48 @@
             border: 1px solid black;
             margin-left: -5px;
         }
+
+        li {
+            float: left;
+            padding: 12px 20px;
+        }
+        
+        li a {
+            color: white;
+            font-size: 125%;
+        }
+
+        li:hover {
+            background-color: #fff;
+            cursor: pointer;
+            text-decoration: none;
+            color: black;
+        }
+
+        li a:hover {
+            text-decoration: none;
+            color: black;
+
+        }
+
+        .active {
+            border-bottom: 4px solid black;
+        }
+
+        .active a {
+            color: black;
+        }
     </style>
 </head>
 
 <body style="width:100%; height:100%;">
-    <div style="text-align: center; margin-top: 3%">
+    <ul id="navbar" style="list-style-type: none; margin: 0; padding: 0; background-color: #f54; overflow: hidden; background-image: url('/img/clyde.png')">
+        <li><a href="#">Home</a></li>
+        <li class="active"><a href="#">Charts</a></li>
+        <li><a href="#">About</a></li>
+    </ul>
+
+    <div style="text-align: center; margin-top: 5%">
     <form id="search-form" onsubmit="onCourseSearch(); return false;" style="text-align:center;">
         <div style="display: inline-block; width: 100%; height: 100%;">
             <input type="text" id="search-box" style="width: 50%" required></input>

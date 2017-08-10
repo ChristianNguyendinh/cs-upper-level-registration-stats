@@ -201,8 +201,9 @@ function genChart(data, className) {
 function updateChart(lineChartData, id) {
     var keyArray = Object.keys(lineChartData);
 
-    var lineChart = d3.selectAll("#" + id);
+    var lineChart = d3.select("#" + id);
 
+    // new scales
     var dates = lineChartData[keyArray[0]].map(function(d) { return d.date });
     var scaleLineX = d3.scalePoint()
         .rangeRound([0, width])
@@ -216,6 +217,7 @@ function updateChart(lineChartData, id) {
             }
         )]);
 
+    // new data
     var line = d3.line()
         .x(function(d, i) { return scaleLineX(d.date) })
         .y(function(d, i) { return scaleLineY(parseInt(d.open)) });
