@@ -7,4 +7,4 @@ Still WIP - working on better display + need to update data + deploy
 
 ### TODO:  
 prepared statements    
-
+Where do i put this damn legend  

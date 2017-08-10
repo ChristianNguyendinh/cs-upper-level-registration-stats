@@ -1,6 +1,6 @@
 // Dimensions of graph
-var margin = {top: 85, right: 20, bottom: 40, left: 80};
-var width = 1100 - margin.right - margin.left;
+var margin = {top: 125, right: 20, bottom: 40, left: 80};
+var width = 1150 - margin.right - margin.left;
 var height = 700 - margin.top - margin.bottom;
 
 // Shared tooltip
@@ -51,8 +51,9 @@ function genChart(data, className) {
     var container = d3.select("body").append("div")
         .attr("class", "chart-container " + className)
         .style("opacity", 0)
-        .style("width", "45%");
+        .style("width", display_wide ? "95%" : "45%");
 
+    // close button
     container.append("span")
         .attr("class", "x-button")
         .attr("onclick", "removeGraph(this)")
@@ -101,7 +102,7 @@ function genChart(data, className) {
 
     // Title
     lineChart.append("g")
-        .attr("transform", "translate(" + ((width / 2.5)) + ",-30)")
+        .attr("transform", "translate(" + ((width / 2.5)) + ",-50)")
         .append("text")
             .html(className.replace("CMSC", "CMSC-"))
             .attr("font-size", "40")
@@ -129,7 +130,7 @@ function genChart(data, className) {
 
     // Legend
     var legend = lineChart.append("g")
-        .attr("transform", "translate(" + width * .8 + ",0)")
+        .attr("transform", "translate(" + width * .8 + ", " + (-margin.top + 5) + ")")
 
     legend.append("rect")
         .attr("width", "15%")
@@ -190,6 +191,9 @@ function genChart(data, className) {
     container.transition()
         .duration(1000)
         .style("opacity", 1);
+
+    positionLabels(lineChart);
+
 
 }
 
@@ -262,22 +266,26 @@ function updateChart(lineChartData, id) {
     var yAxis = d3.axisLeft(scaleLineY);
 
     lineChart.append("g")
-        .transition()
-        .duration(500)
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .style("font-size", "20px")
-        .call(xAxis);
+        .call(xAxis)
+        .style("opacity", 0)
+        .transition()
+        .duration(750)
+            .style("opacity", 1);
 
     lineChart.append("g")
-        .transition()
-        .duration(500)
         .attr("class", "y axis")
         .style("font-size", "20px")
         .call(yAxis);
 
     // Draw new grids
-    lineChart.selectAll(".background-line").remove();
+    lineChart.selectAll(".background-line")
+        .transition()
+        .duration(1000)
+            .attr("opacity", 0)
+            .remove();
 
     lineChartData[keyArray[0]].forEach(function(day, index) {
         lineChart.append("line")
@@ -286,7 +294,11 @@ function updateChart(lineChartData, id) {
             .attr("x2", scaleLineX(day['date']))
             .attr("y2", height)
             .attr("stroke", "grey")
-            .attr("class", "background-line");
+            .attr("class", "background-line")
+            .attr("opacity", 0)
+            .transition()
+            .duration(1000)
+                .attr("opacity", 1);
     });
 
     scaleLineY.ticks().forEach(function(label, index) {
@@ -296,7 +308,23 @@ function updateChart(lineChartData, id) {
             .attr("x2", width)
             .attr("y2", scaleLineY(label))
             .attr("stroke", "grey")
-            .attr("class", "background-line");
+            .attr("class", "background-line")
+            .attr("opacity", 0)
+            .transition()
+            .duration(1000)
+                .attr("opacity", 1);
     })
+
+    positionLabels(lineChart);
+}
+
+function positionLabels(lc) {
+    lc.selectAll(".x")
+        .selectAll("text")
+            .attr("dy", "25px");
+
+    lc.selectAll(".y")
+        .selectAll("text")
+            .attr("dx", "-10px");
 }
 
