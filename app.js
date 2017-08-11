@@ -27,11 +27,12 @@ server.get('/test', function(req, res) {
     res.render('test');
 });
 
+
 // get all data for all classes
-server.get('/api/stats', function(req, res) {
+server.get('/api/:semester(\\d{6})/stats', validateSemester, function(req, res) {
     let data = {};
     db.serialize(() => {
-        db.each('SELECT * FROM test1', (err, row) => {
+        db.each('SELECT * FROM \"' + req.params.semester + '\";', (err, row) => {
             if (!err) {
                 //course|section|open|total|waitlist|date
                 if (!data.hasOwnProperty(row.course))
@@ -53,13 +54,13 @@ server.get('/api/stats', function(req, res) {
 });
 
 // get all the data we have stored for a class
-server.get('/api/course/:name', function(req, res) {
+server.get('/api/:semester(\\d{6})/course/:name', validateSemester, function(req, res) {
     let data = {};
     let courseName = req.params.name.toUpperCase();
     data[courseName] = {};
 
     db.serialize(() => {
-        db.each('SELECT * FROM test1 WHERE course = \"' + courseName + '\"', (err, row) => {
+        db.each('SELECT * FROM \"' + req.params.semester + '\" WHERE course = ?;', [courseName], (err, row) => {
             if (!err) {
                 if (!data[courseName].hasOwnProperty(row.section))
                     data[courseName][row.section] = [];
@@ -78,7 +79,7 @@ server.get('/api/course/:name', function(req, res) {
 });
 
 // get data for a course, within a time range
-server.get('/api/:course/((\\d\\d\-\\d\\d\-\\d\\d\_\\d\\d\-\\d\\d\-\\d\\d))', function(req, res) {
+server.get('/api/:semester(\\d{6})/:course/((\\d\\d\-\\d\\d\-\\d\\d\_\\d\\d\-\\d\\d\-\\d\\d))', validateSemester, function(req, res) {
 
     var split = req.params['0'].split("_");
     var startDate = split[0];
@@ -89,7 +90,7 @@ server.get('/api/:course/((\\d\\d\-\\d\\d\-\\d\\d\_\\d\\d\-\\d\\d\-\\d\\d))', fu
     data[courseName] = {};
 
     db.serialize(() => {
-        db.each('SELECT * FROM test1 WHERE course = \"' + courseName + '\" AND date >= \"' + startDate + '\" AND date <= \"' + endDate + '\"' , (err, row) => {
+        db.each('SELECT * FROM \"' + req.params.semester + '\" WHERE course = ? AND date >= ? AND date <= ?;', [courseName, startDate, endDate], (err, row) => {
             if (!data[courseName].hasOwnProperty(row.section))
                 data[courseName][row.section] = [];
 
@@ -102,14 +103,14 @@ server.get('/api/:course/((\\d\\d\-\\d\\d\-\\d\\d\_\\d\\d\-\\d\\d\-\\d\\d))', fu
 });
 
 // get info about a class for the most recent day of data added
-server.get('/api/recent/:name', function(req, res) {
+server.get('/api/:semester(\\d{6})/recent/:name', validateSemester, function(req, res) {
     let data = {};
     let courseName = req.params.name.toUpperCase();
     let rDate = new Date(0);
     let dateString = "";
 
     db.serialize(() => {
-        db.each('SELECT DISTINCT date FROM test1 WHERE course = \"' + courseName + '\"', (err, row) => {
+        db.each('SELECT DISTINCT date FROM \"' + req.params.semester + '\" WHERE course = ?;', [courseName], (err, row) => {
             if (!err) {
                 let queryDate = new Date(row.date);
                 if (queryDate > rDate) {
@@ -124,7 +125,7 @@ server.get('/api/recent/:name', function(req, res) {
             if (err || rowc == 0)
                 res.json({error: {type: 'courseOrDateNotFound', message: 'course ' + courseName + ' date went wrong!', trace: err}});
             else {
-                db.each('SELECT * FROM test1 WHERE course = \"' + courseName + '\" AND date = \"' + dateString + '\"', (err, row) => {
+                db.each('SELECT * FROM \"' + req.params.semester + '\" WHERE course = ? AND date = ?', [courseName, dateString], (err, row) => {
                     if (!err) 
                         data[row.section] = {open: row.open, total: row.total, wait: row.waitlist, date: row.date};
                     else
@@ -143,10 +144,10 @@ server.get('/api/recent/:name', function(req, res) {
 });
 
 // send a list of courses we have data for
-server.get('/api/courselist', function(req, res) {
+server.get('/api/:semester(\\d{6})/courselist', validateSemester, function(req, res) {
     let data = [];
     db.serialize(() => {
-        db.each('SELECT DISTINCT course FROM test1', (err, row) => {
+        db.each('SELECT DISTINCT course FROM \"' + req.params.semester + '\";', (err, row) => {
             if (!err) {
                 // skip the column header
                 if (row.course != "course")
@@ -161,6 +162,15 @@ server.get('/api/courselist', function(req, res) {
         });
     });
 });
+
+function validateSemester(req, res, next) {
+    var validSemsters = ["201701"];
+
+    if (validSemsters.includes(req.params.semester))
+        next();
+    else
+        res.send("Invalid Semseter")
+}
 
 // Run scrape data at 11:55pm EST daily
 var job = new CronJob({

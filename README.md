@@ -6,6 +6,5 @@ Still WIP - working on better display + need to update data + deploy
 --------------------------    
 
 ### TODO:  
-prepared statements    
 Where do i put this damn legend  
-remove depenencies on bootstrap - only button and font styles i believe  
+remove depenencies on bootstrap - only button and font styles i believe    

@@ -193,7 +193,7 @@
             var course = $("#search-box").val();
             searchedCourses.add(course);
 
-            d3.json("/api/course/" + course, function(data) {
+            d3.json("/api/201701/course/" + course, function(data) {
                 genChart(data[course], course);
                 $("#search-box").val("");
             });
@@ -213,7 +213,7 @@
             var dateString = startDate + "_" + endDate;
 
             for (var course of searchedCourses) {
-                d3.json("/api/" + course + "/" + dateString, function(data) {
+                d3.json("/api/201701/" + course + "/" + dateString, function(data) {
                     // need a new variable because variable 'course' will be overriden one loop moves
                     // while this function is still asnyc running
                     var courseName = Object.keys(data)[0];
@@ -248,7 +248,7 @@
         }
 
         // initialize search box for autocomplete and validation
-        d3.json("/api/courselist", function(data) {
+        d3.json("/api/201701/courselist", function(data) {
             var searchBox = $("#search-box");
 
             searchBox.autocomplete({
