@@ -1,0 +1,29 @@
+ul {
+    list-style-type: none; 
+    margin: 0; 
+    padding: 0; 
+    background-color: #f54; 
+    overflow: hidden; 
+    background-image: url('/img/clyde.png');
+}
+
+li {
+    float: left;
+    padding: 12px 20px;
+    color: white;
+    font-size: 125%;
+    color: white;
+    font-size: 125%;
+}
+
+li:hover {
+    background-color: #fff;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+}
+
+a li:hover {
+    text-decoration: none;
+    color: black;
+}

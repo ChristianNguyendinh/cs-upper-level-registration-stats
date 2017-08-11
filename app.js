@@ -19,12 +19,20 @@ server.use('/scripts', express.static(path.join(__dirname, '/node_modules/chart.
 server.use('/scripts', express.static(path.join(__dirname, '/node_modules/d3/')));
 
 
-server.get('/index', function(req, res) {
+server.get('/', function(req, res) {
     res.render('index');
 });
 
 server.get('/test', function(req, res) {
     res.render('test');
+});
+
+server.get('/about', function(req, res) {
+    res.render('about');
+});
+
+server.get('/help', function(req, res) {
+    res.render('help');
 });
 
 
@@ -147,7 +155,7 @@ server.get('/api/:semester(\\d{6})/recent/:name', validateSemester, function(req
 server.get('/api/:semester(\\d{6})/courselist', validateSemester, function(req, res) {
     let data = [];
     db.serialize(() => {
-        db.each('SELECT DISTINCT course FROM \"' + req.params.semester + '\";', (err, row) => {
+        db.each('SELECT DISTINCT course FROM \"' + req.params.semester + '\" ORDER BY course ASC;', (err, row) => {
             if (!err) {
                 // skip the column header
                 if (row.course != "course")
@@ -183,10 +191,6 @@ var job = new CronJob({
 });
 
 server.set('port', (process.env.PORT || 8000));
-
-server.get('/', function(req, res) {
-    res.send("Made it")
-})
 
 server.listen(server.get('port'), function() {
     job.start();
