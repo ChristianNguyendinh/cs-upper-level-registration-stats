@@ -3,7 +3,7 @@ var router = express.Router({ mergeParams: true});
 var api = require("./api.js");
 
 router.get('/*', function(req, res, next) {
-    // validate that the semester given is 
+    // validate that the semester given is an actual semester code with data
     var validSemsters = ["201701"];
 
     if (validSemsters.includes(req.params.semester))

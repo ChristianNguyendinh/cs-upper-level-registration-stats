@@ -33,16 +33,11 @@ server.get('/help', function(req, res) {
     res.render('help');
 });
 
+server.get('/api/semesterlist', function(req, res) {
+    res.json(["201701"]);
+});
+
 server.use('/api/:semester(\\d{6})', require("./routes/routes.js"));
-
-function validateSemester(req, res, next) {
-    var validSemsters = ["201701"];
-
-    if (validSemsters.includes(req.params.semester))
-        next();
-    else
-        res.send("Invalid Semseter")
-}
 
 // Run scrape data at 11:55pm EST daily
 var job = new CronJob({
