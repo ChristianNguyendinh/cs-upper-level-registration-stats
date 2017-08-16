@@ -15,18 +15,18 @@ var colorArray = ["#34c", "#3c4", "#f00", "#0f0", "#00f", "#ff0", "#0ff", "#f0f"
 function formatTick(d, i, len) {
     var mod = 0;
     if (len <= 10) {
-        mod = 1
+        mod = 1;
     } else if (len <= 40) {
-        mod = 2
+        mod = 2;
     } else {
-        mod = 5
+        mod = 5;
     }
 
     var spl = d.split("-");
     if (i % mod == 0) {
         return spl[0] + "/" + spl[1];
     } else {
-        return ""
+        return "";
     }
 }
 
@@ -44,8 +44,8 @@ function genChart(data, className) {
 
     // Create line function for x,y positions
     var line = d3.line()
-        .x(function(d, i) { return scaleLineX(d.date) })
-        .y(function(d, i) { return scaleLineY(parseInt(d.open)) });
+        .x(function(d) { return scaleLineX(d.date); })
+        .y(function(d) { return scaleLineY(parseInt(d.open)); });
 
     // Make the chart container
     var container = d3.select("body").append("div")
@@ -57,7 +57,7 @@ function genChart(data, className) {
     container.append("span")
         .attr("class", "x-button")
         .attr("onclick", "removeGraph(this)")
-        .html("&cross;")
+        .html("&cross;");
 
     // Initialize line chart svg
     var lineChart = container.append("svg")
@@ -69,16 +69,16 @@ function genChart(data, className) {
             .attr("id", className);
 
     // use passed in data
-    lineChartData = data;
+    var lineChartData = data;
     var keyArray = Object.keys(lineChartData);
 
     // Set domain for scales
-    var dates = lineChartData[keyArray[0]].map(function(d) { return d.date });
+    var dates = lineChartData[keyArray[0]].map(function(d) { return d.date; });
     scaleLineX.domain(dates);
 
     var maxY = d3.max(keyArray, 
         function(d) { 
-            return d3.max(lineChartData[d], function(d1) { return parseInt(d1['open']); });
+            return d3.max(lineChartData[d], function(d1) { return parseInt(d1["open"]); });
         }
     );
     scaleLineY.domain([0, maxY]);
@@ -105,20 +105,20 @@ function genChart(data, className) {
         .attr("transform", "translate(" + ((width / 2.5)) + ",-50)")
         .append("text")
             .html(className.replace("CMSC", "CMSC-"))
-            .attr("font-size", "40")
+            .attr("font-size", "40");
 
     // Background grid
-    lineChartData[keyArray[0]].forEach(function(day, index) {
+    lineChartData[keyArray[0]].forEach(function(day) {
         lineChart.append("line")
-            .attr("x1", scaleLineX(day['date']))
+            .attr("x1", scaleLineX(day["date"]))
             .attr("y1", 0)
-            .attr("x2", scaleLineX(day['date']))
+            .attr("x2", scaleLineX(day["date"]))
             .attr("y2", height)
             .attr("stroke", "grey")
             .attr("class", "background-line");
     });
 
-    scaleLineY.ticks().forEach(function(label, index) {
+    scaleLineY.ticks().forEach(function(label) {
         lineChart.append("line")
             .attr("x1", 0)
             .attr("y1", scaleLineY(label))
@@ -126,11 +126,11 @@ function genChart(data, className) {
             .attr("y2", scaleLineY(label))
             .attr("stroke", "grey")
             .attr("class", "background-line");
-    })
+    });
 
     // Legend
     var legend = lineChart.append("g")
-        .attr("transform", "translate(" + width * .8 + ", " + (-margin.top + 5) + ")")
+        .attr("transform", "translate(" + width * .8 + ", " + (-margin.top + 5) + ")");
 
     legend.append("rect")
         .attr("width", "15%")
@@ -154,8 +154,8 @@ function genChart(data, className) {
             .enter()
             .append("circle")
                 .attr("r", 7)
-                .attr("cx", function(d, i) { return scaleLineX(d.date) })
-                .attr("cy", function(d, i) { return scaleLineY(d.open) })
+                .attr("cx", function(d) { return scaleLineX(d.date); })
+                .attr("cy", function(d) { return scaleLineY(d.open); })
                 .attr("fill", colorArray[index])
                 .attr("class", "dot dot-" + element)
                 .on("mouseover", function(d) {
@@ -164,9 +164,9 @@ function genChart(data, className) {
                         .style("opacity", 0.9);
                     tooltip.html("Date: " + d.date + "<br/>" + "Seats Open: <b>" + d.open + "</b>")
                         .style("left", (d3.event.pageX) + "px")
-                        .style("top", (d3.event.pageY) + "px")
+                        .style("top", (d3.event.pageY) + "px");
                 })
-                .on("mouseout", function(d) {
+                .on("mouseout", function() {
                     tooltip.transition()
                         .duration(500)
                         .style("opacity", 0);
@@ -185,7 +185,7 @@ function genChart(data, className) {
         legend.append("text")
             .attr("x", index < 4 ? 40 : 120)
             .attr("y", 22 * (index % 4 + 1))
-            .html(element)
+            .html(element);
     });
 
     container.transition()
@@ -204,7 +204,7 @@ function updateChart(lineChartData, id) {
     var lineChart = d3.select("#" + id);
 
     // new scales
-    var dates = lineChartData[keyArray[0]].map(function(d) { return d.date });
+    var dates = lineChartData[keyArray[0]].map(function(d) { return d.date; });
     var scaleLineX = d3.scalePoint()
         .rangeRound([0, width])
         .domain(dates);
@@ -213,14 +213,14 @@ function updateChart(lineChartData, id) {
         .rangeRound([height, 0])
         .domain([0, d3.max(keyArray, 
             function(d) { 
-                return d3.max(lineChartData[d], function(d1) { return parseInt(d1['open']); });
+                return d3.max(lineChartData[d], function(d1) { return parseInt(d1["open"]); });
             }
         )]);
 
     // new data
     var line = d3.line()
-        .x(function(d, i) { return scaleLineX(d.date) })
-        .y(function(d, i) { return scaleLineY(parseInt(d.open)) });
+        .x(function(d) { return scaleLineX(d.date); })
+        .y(function(d) { return scaleLineY(parseInt(d.open)); });
 
     lineChart.selectAll(".my-line").remove();
     lineChart.selectAll(".dot").remove();
@@ -239,8 +239,8 @@ function updateChart(lineChartData, id) {
             .enter()
             .append("circle")
                 .attr("r", 0)
-                .attr("cx", function(d, i) { return scaleLineX(d.date) })
-                .attr("cy", function(d, i) { return scaleLineY(d.open) })
+                .attr("cx", function(d) { return scaleLineX(d.date); })
+                .attr("cy", function(d) { return scaleLineY(d.open); })
                 .attr("fill", colorArray[index])
                 .attr("class", "dot dot-" + element)
                 .on("mouseover", function(d) {
@@ -249,9 +249,9 @@ function updateChart(lineChartData, id) {
                         .style("opacity", 0.9);
                     tooltip.html("Date: " + d.date + "<br/>" + "Seats Open: <b>" + d.open + "</b>")
                         .style("left", (d3.event.pageX) + "px")
-                        .style("top", (d3.event.pageY) + "px")
+                        .style("top", (d3.event.pageY) + "px");
                 })
-                .on("mouseout", function(d) {
+                .on("mouseout", function() {
                     tooltip.transition()
                         .duration(500)
                         .style("opacity", 0);
@@ -289,11 +289,11 @@ function updateChart(lineChartData, id) {
             .attr("opacity", 0)
             .remove();
 
-    lineChartData[keyArray[0]].forEach(function(day, index) {
+    lineChartData[keyArray[0]].forEach(function(day) {
         lineChart.append("line")
-            .attr("x1", scaleLineX(day['date']))
+            .attr("x1", scaleLineX(day["date"]))
             .attr("y1", 0)
-            .attr("x2", scaleLineX(day['date']))
+            .attr("x2", scaleLineX(day["date"]))
             .attr("y2", height)
             .attr("stroke", "grey")
             .attr("class", "background-line")
@@ -303,7 +303,7 @@ function updateChart(lineChartData, id) {
                 .attr("opacity", 1);
     });
 
-    scaleLineY.ticks().forEach(function(label, index) {
+    scaleLineY.ticks().forEach(function(label) {
         lineChart.append("line")
             .attr("x1", 0)
             .attr("y1", scaleLineY(label))
@@ -315,7 +315,7 @@ function updateChart(lineChartData, id) {
             .transition()
             .duration(1000)
                 .attr("opacity", 1);
-    })
+    });
 
     positionLabels(lineChart);
 }
