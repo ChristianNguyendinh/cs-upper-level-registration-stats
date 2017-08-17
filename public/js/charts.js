@@ -1,15 +1,23 @@
-// Dimensions of graph
-var margin = {top: 125, right: 20, bottom: 40, left: 80};
-var width = 1150 - margin.right - margin.left;
-var height = 700 - margin.top - margin.bottom;
+var margin;
+var width;
+var height;
+var tooltip;
+var colorArray;
 
-// Shared tooltip
-var tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+function init() {
+    // Dimensions of graph
+    margin = {top: 125, right: 20, bottom: 40, left: 80};
+    width = 1150 - margin.right - margin.left;
+    height = 700 - margin.top - margin.bottom;
 
-// coloring will prolly change
-var colorArray = ["#34c", "#3c4", "#f00", "#0f0", "#00f", "#ff0", "#0ff", "#f0f"];
+    // Shared tooltip
+    tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+
+    // coloring will prolly change
+    colorArray = ["#34c", "#3c4", "#f00", "#0f0", "#00f", "#ff0", "#0ff", "#f0f"];
+}
 
 // format x axis date tick labels
 function formatTick(d, i, len) {
@@ -329,4 +337,15 @@ function positionLabels(lc) {
         .selectAll("text")
             .attr("dx", "-10px");
 }
+
+try {
+    module.exports = {
+        formatTick: formatTick
+    };
+} catch (e) {
+    // module is only defined in the node, so just ignore this if running in browser
+}
+
+
+
 

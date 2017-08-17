@@ -163,6 +163,9 @@
         var display_wide = false;
         var searchedCourses = new Set();
 
+        // initialize variables for chart building
+        init();
+
         // remove line chart
         function removeGraph(button) {
             var graph = $(button.parentNode)
