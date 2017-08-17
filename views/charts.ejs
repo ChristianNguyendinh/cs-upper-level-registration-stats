@@ -117,11 +117,11 @@
                 <div style="float:left">
                     <div>
                         From:
-                        <input type="date" id="start-time" required></input>
+                        <input type="date" id="start-time" min="2017-03-30" max="2017-04-22" required></input>
                     </div>
                     <div>
                         To:  
-                        <input type="date" id="end-time" required></input>
+                        <input type="date" id="end-time" min="2017-03-30" max="2017-04-22" required></input>
                     </div>
                 </div>
 
@@ -152,11 +152,12 @@
     </div>
 
 
-    <script type=text/javascript src="/js/test.js"></script>
+    <script type=text/javascript src="/js/charts.js"></script>
     <script>
 
         var startDate;
         var endDate;
+        var dateString = null;
         // may want to move this to some global available location
         var semester = "201701";
         var display_wide = false;
@@ -180,12 +181,22 @@
         // create line chart on form submit
         function onCourseSearch() {
             var course = $("#search-box").val();
+
+            if (searchedCourses.has(course)) return;
+
             searchedCourses.add(course);
 
-            d3.json("/api/" + semester + "/course/" + course, function(data) {
-                genChart(data[course], course);
-                $("#search-box").val("");
-            });
+            if (dateString) {
+                d3.json("/api/" + semester + "/" + course + "/" + dateString, function(data) {
+                    genChart(data[course], course);
+                    $("#search-box").val("");
+                });
+            } else {
+                d3.json("/api/" + semester + "/course/" + course, function(data) {
+                    genChart(data[course], course);
+                    $("#search-box").val("");
+                });
+            }
         }
 
         // Update the time interval
@@ -201,7 +212,7 @@
             $("#info-title").html("Data for: <i>" + startDate + "</i> to <i>" + endDate + "</i>");
 
             // date objects dont convert str to date x browser well, so just use strings
-            var dateString = startDate + "_" + endDate;
+            dateString = startDate + "_" + endDate;
 
             // refresh the already drawn classes
             for (var course of searchedCourses) {

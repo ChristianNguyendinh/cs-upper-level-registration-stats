@@ -20,8 +20,8 @@ server.get("/", function(req, res) {
     res.render("index");
 });
 
-server.get("/test", function(req, res) {
-    res.render("test");
+server.get("/charts", function(req, res) {
+    res.render("charts");
 });
 
 server.get("/about", function(req, res) {

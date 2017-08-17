@@ -7,4 +7,5 @@ Still WIP - working on better display + need to update data + deploy
 
 ### TODO:  
 Where do i put this damn legend  
+Once add new semester data - remove hardcoded max min input dates and have it update on semester change  
 remove depenencies on bootstrap - only button and font styles i believe    
