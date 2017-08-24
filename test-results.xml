@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="0.003" tests="6" failures="1">
+  <testsuite name="Root Suite" timestamp="2017-08-24T22:05:20" tests="0" failures="0" time="0">
+  </testsuite>
+  <testsuite name="Charts Rendering" timestamp="2017-08-24T22:05:20" tests="0" file="/Users/christian/Documents/side_projects/CS_upper_levels/test/test.js" failures="0" time="0">
+  </testsuite>
+  <testsuite name="# Tick Formatting" timestamp="2017-08-24T22:05:20" tests="6" file="/Users/christian/Documents/side_projects/CS_upper_levels/test/test.js" failures="1" time="0.003">
+    <testcase name="Charts Rendering # Tick Formatting Should return all 4 ticks" time="0.002" classname="Should return all 4 ticks">
+      <failure><![CDATA[AssertionError: 4 == 3
+    at Context.<anonymous> (test/test.js:23:20)]]></failure>
+    </testcase>
+    <testcase name="Charts Rendering # Tick Formatting Should return all 9 ticks" time="0" classname="Should return all 9 ticks">
+    </testcase>
+    <testcase name="Charts Rendering # Tick Formatting Should return 6 / 11 ticks" time="0" classname="Should return 6 / 11 ticks">
+    </testcase>
+    <testcase name="Charts Rendering # Tick Formatting Should return 20 / 40 ticks" time="0" classname="Should return 20 / 40 ticks">
+    </testcase>
+    <testcase name="Charts Rendering # Tick Formatting Should return 9 / 41 ticks" time="0" classname="Should return 9 / 41 ticks">
+    </testcase>
+    <testcase name="Charts Rendering # Tick Formatting Should return 10 / 50 ticks" time="0.001" classname="Should return 10 / 50 ticks">
+    </testcase>
+  </testsuite>
+</testsuites>
