@@ -54,3 +54,5 @@ server.listen(server.get("port"), function() {
     job.start();
     console.log("Server running on port " + server.get("port"));
 });
+
+module.exports = server;

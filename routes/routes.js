@@ -6,10 +6,13 @@ router.get("/*", function(req, res, next) {
     // validate that the semester given is an actual semester code with data
     var validSemsters = ["201701"];
 
-    if (validSemsters.includes(req.params.semester))
+    if (validSemsters.includes(req.params.semester)) {
         next();
-    else
+    }
+    else {
+    	res.statusCode = 406;
         res.send("Invalid Semseter");
+    }
 });
 
 router.get("/stats", api.stats);

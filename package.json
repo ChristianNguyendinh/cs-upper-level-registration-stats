@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "mocha",
+    "unit-test": "mocha test/unit_test.js",
+    "integration-test": "mocha test/integration_test.js",
     "xmltest": "mocha --reporter mocha-junit-reporter",
     "lint": "eslint app.js public/js/**/*.js routes/**/*.js test/**/*.js"
   },
@@ -43,6 +44,7 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "mocha": "^3.5.0",
-    "mocha-junit-reporter": "^1.13.0"
+    "mocha-junit-reporter": "^1.13.0",
+    "supertest": "^3.0.0"
   }
 }

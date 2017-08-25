@@ -10,7 +10,7 @@ function collectData() {
     var basic_upper_levels = ["CMSC411", "CMSC412", "CMSC414", "CMSC417", 
         "CMSC420", "CMSC421", "CMSC422", "CMSC423", "CMSC424", 
         "CMSC426", "CMSC430", "CMSC433", "CMSC434", "CMSC435", 
-        "CMSC436", "CMSC451", "CMSC460", "CMSC466", "CMSC474"]
+        "CMSC436", "CMSC451", "CMSC460", "CMSC466", "CMSC474"];
 
     var upper_level_list = basic_upper_levels.join(",");
     // String representation of data for manual extraction and emailing
