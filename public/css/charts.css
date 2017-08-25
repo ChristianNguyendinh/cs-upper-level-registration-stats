@@ -1,0 +1,89 @@
+.my-line {
+    fill: none;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    stroke-width: 3;
+}
+
+.dot:hover {
+    r: 10px;
+}
+
+.tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 10px;
+    background: #f54;
+    color: black;
+    pointer-events: none;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+.x-button {
+    font-size: 3vw;
+    position: absolute; 
+    left: 10px; 
+    top: 0px; 
+    cursor: pointer; 
+}
+.x-button:hover {
+    color: gray;
+}
+
+.chart-container {
+    position: relative; 
+    /*width: 45%;*/
+    margin: 2%;
+    float: left; 
+    border: 1px solid black; 
+    border-radius: 15px;
+    /*-moz-transition: all 3s;
+    -webkit-transition: all 3s;
+    -o-transition: all 3s;*/
+}
+
+.autocomplete-suggestions { 
+    border: 1px solid #000; 
+    background: #fff; 
+    cursor: pointer; 
+    overflow: auto; 
+    max-height: 65%;
+}
+
+.autocomplete-suggestion { 
+    border-bottom: 2px solid #aaa; 
+    padding: 10px 5px; 
+    font-size: 2vh; 
+    white-space: nowrap; 
+    overflow: hidden; 
+
+}
+.autocomplete-selected { 
+    background: #f54; 
+}
+
+.autocomplete-suggestions strong { 
+    font-weight: bold; 
+}
+
+#search-box {
+    font-size: 18px;
+    width: 30%;
+    vertical-align: top;
+}
+
+#search-button {
+    padding: 0.5% 2%;
+    vertical-align: top;
+}
+
+.test {
+    padding: 7px 15px;
+    border-radius: 4px;
+    background-color: white;
+}
+.layout-btn {
+    border: 1px solid black;
+    margin-left: -5px;
+}
