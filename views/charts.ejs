@@ -158,8 +158,7 @@
         var startDate;
         var endDate;
         var dateString = null;
-        // may want to move this to some global available location
-        var semester = "201701";
+        var semester;
         var display_wide = false;
         var searchedCourses = new Set();
 
@@ -253,27 +252,37 @@
             }
         }
 
+        // set default semester to be current
+        var setSemester = new Promise(function(resolve, reject) {
+            d3.json("/api/currentsemester", function(data) {
+                semester = data['currentSemester'];
+                resolve();
+            });
+        });
+
         // initialize search box for autocomplete and validation
-        d3.json("/api/" + semester + "/courselist", function(data) {
-            var searchBox = $("#search-box");
+        setSemester.then(function() {
+            d3.json("/api/" + semester + "/courselist", function(data) {
+                var searchBox = $("#search-box");
 
-            searchBox.autocomplete({
-                maxHeight: null,
-                lookup: data,
-                onSelect: function(selection) {
-                    $("#search-box").val(selection['value']);
-                }
+                searchBox.autocomplete({
+                    maxHeight: null,
+                    lookup: data,
+                    onSelect: function(selection) {
+                        $("#search-box").val(selection['value']);
+                    }
+                });
+
+                var regex = ""
+                data.forEach(function(d, i) {
+                    if (i == 0)
+                        regex += d['value'];
+                    else
+                        regex += "|" + d['value'];
+                });
+
+                searchBox.attr("pattern", regex);
             });
-
-            var regex = ""
-            data.forEach(function(d, i) {
-                if (i == 0)
-                    regex += d['value'];
-                else
-                    regex += "|" + d['value'];
-            });
-
-            searchBox.attr("pattern", regex);
         });
 
         // initialize semester list
