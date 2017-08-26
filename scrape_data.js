@@ -7,6 +7,8 @@ const db = new sqlite3.Database(__dirname + "/data/courses.db");
 // const pg = require('pg');
 // const conString = process.env.DATABASE_URL || 'postgres://localhost:5432/christian';
 
+var semester = "test1";
+
 // Srape the data, print out optionally, TODO: Save in DB and email
 function collectData() {
 
@@ -111,7 +113,7 @@ function loadData(dataObj, totalSections, dataString) {
             dataObj[course].forEach(function(section) {
                 // console.log(course + " " + section.section + " " + section.total + " " + section.open + " " + section.waitlist);
 
-                db.run("INSERT INTO " + + " (course, section, open, total, waitlist, date) VALUES ($1, $2, $3, $4, $5, $6);",
+                db.run("INSERT INTO " + semester + " (course, section, open, total, waitlist, date) VALUES ($1, $2, $3, $4, $5, $6);",
                     [course, section.section, section.open, section.total, section.waitlist, dateString],
                     (err, row) => {
                         curr++;
