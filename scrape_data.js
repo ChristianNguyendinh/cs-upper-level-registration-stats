@@ -2,11 +2,14 @@ const fs = require('fs');
 const request = require('request');
 const cheerio = require('cheerio');
 const MANUAL_MODE = process.argv[2];
-const pg = require('pg');
-const conString = process.env.DATABASE_URL || 'postgres://localhost:5432/christian';
+const sqlite3 = require("sqlite3").verbose();
+const db = new sqlite3.Database(__dirname + "/data/courses.db");
+// const pg = require('pg');
+// const conString = process.env.DATABASE_URL || 'postgres://localhost:5432/christian';
 
 // Srape the data, print out optionally, TODO: Save in DB and email
 function collectData() {
+
     var basic_upper_levels = ["CMSC411", "CMSC412", "CMSC414", "CMSC417", 
         "CMSC420", "CMSC421", "CMSC422", "CMSC423", "CMSC424", 
         "CMSC426", "CMSC430", "CMSC433", "CMSC434", "CMSC435", 
@@ -84,28 +87,47 @@ function loadData(dataObj, totalSections, dataString) {
 
     let curr = 0;
 
-    pg.connect(conString, (err, client, done) => {
-        if (err) return console.error(err);
+    // pg.connect(conString, (err, client, done) => {
+    //     if (err) return console.error(err);
 
+    //     Object.keys(dataObj).forEach(function(course) {
+    //         dataObj[course].forEach(function(section) {
+    //             // console.log(course + " " + section.section + " " + section.total + " " + section.open + " " + section.waitlist);
+    //             client.query('INSERT INTO courses (course, section, open, total, waitlist, date) VALUES ($1, $2, $3, $4, $5, $6);',
+    //                 [course, section.section, section.open, section.total, section.waitlist, dateString])
+    //             .then(() => {
+    //                 curr++;
+    //                 done();
+    //                 if (curr >= totalSections) {
+    //                     saveLogs(dataString, dateString);
+    //                 }
+    //             });
+    //         });
+    //     });
+    // });
+
+    db.serialize(() => {
         Object.keys(dataObj).forEach(function(course) {
             dataObj[course].forEach(function(section) {
                 // console.log(course + " " + section.section + " " + section.total + " " + section.open + " " + section.waitlist);
-                client.query('INSERT INTO courses (course, section, open, total, waitlist, date) VALUES ($1, $2, $3, $4, $5, $6);',
-                    [course, section.section, section.open, section.total, section.waitlist, dateString])
-                .then(() => {
-                    curr++;
-                    done();
-                    if (curr >= totalSections) {
-                        saveLogs(dataString, dateString);
+
+                db.run("INSERT INTO " + + " (course, section, open, total, waitlist, date) VALUES ($1, $2, $3, $4, $5, $6);",
+                    [course, section.section, section.open, section.total, section.waitlist, dateString],
+                    (err, row) => {
+                        curr++;
+                        if (curr >= totalSections) {
+                            saveLogs(dataString, dateString);
+                        }
                     }
-                });
+                );
+            
             });
         });
     });
 }
 
 function saveLogs(dataString, date) {
-    fs.writeFile("./logs/" + date + "_stats.txt", dataString, function(err) {
+    fs.writeFile(__dirname + "/logs/" + date + "_stats.txt", dataString, function(err) {
         if (err) {
             return console.error(err);
         }
@@ -118,10 +140,9 @@ function saveLogs(dataString, date) {
 
 function cleanup() {
     console.log("Data Collected!");
-    pg.end();
 }
 
-module.exports = function run() {
+function run() {
     if (process.argv.length <= 3) {
         if (MANUAL_MODE && (MANUAL_MODE != "-p" && MANUAL_MODE != "--print")) {
             console.error("Optional 1 argument of -p or --print");
@@ -133,6 +154,8 @@ module.exports = function run() {
 
     collectData();
 }
+
+run();
 
 
 
