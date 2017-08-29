@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="0.08800000000000002" tests="13" failures="0">
+  <testsuite name="Root Suite" timestamp="2017-08-27T17:30:53" tests="0" failures="0" time="0">
+  </testsuite>
+  <testsuite name="Semester Validation" timestamp="2017-08-27T17:30:53" tests="5" file="/Users/christian/Documents/side_projects/CS_upper_levels/test/integration_test.js" failures="0" time="0.07900000000000001">
+    <testcase name="Semester Validation should work with a valid semester" time="0.056" classname="should work with a valid semester">
+    </testcase>
+    <testcase name="Semester Validation should 406 with a invalid semester" time="0.013" classname="should 406 with a invalid semester">
+    </testcase>
+    <testcase name="Semester Validation should 406 with a semester not added yet" time="0.003" classname="should 406 with a semester not added yet">
+    </testcase>
+    <testcase name="Semester Validation should 404 with a invalid semester format" time="0.005" classname="should 404 with a invalid semester format">
+    </testcase>
+    <testcase name="Semester Validation should 404 with another invalid semester format" time="0.002" classname="should 404 with another invalid semester format">
+    </testcase>
+  </testsuite>
+  <testsuite name="API calls" timestamp="2017-08-27T17:30:53" tests="2" file="/Users/christian/Documents/side_projects/CS_upper_levels/test/integration_test.js" failures="0" time="0.009000000000000001">
+    <testcase name="API calls should return expected semesters" time="0.005" classname="should return expected semesters">
+    </testcase>
+    <testcase name="API calls should return expected courses" time="0.004" classname="should return expected courses">
+    </testcase>
+  </testsuite>
+  <testsuite name="Charts Rendering" timestamp="2017-08-27T17:30:53" tests="0" file="/Users/christian/Documents/side_projects/CS_upper_levels/test/unit_test.js" failures="0" time="0">
+  </testsuite>
+  <testsuite name="# Tick Formatting" timestamp="2017-08-27T17:30:53" tests="6" file="/Users/christian/Documents/side_projects/CS_upper_levels/test/unit_test.js" failures="0" time="0">
+    <testcase name="Charts Rendering # Tick Formatting Should return all 4 ticks" time="0" classname="Should return all 4 ticks">
+    </testcase>
+    <testcase name="Charts Rendering # Tick Formatting Should return all 9 ticks" time="0" classname="Should return all 9 ticks">
+    </testcase>
+    <testcase name="Charts Rendering # Tick Formatting Should return 6 / 11 ticks" time="0" classname="Should return 6 / 11 ticks">
+    </testcase>
+    <testcase name="Charts Rendering # Tick Formatting Should return 20 / 40 ticks" time="0" classname="Should return 20 / 40 ticks">
+    </testcase>
+    <testcase name="Charts Rendering # Tick Formatting Should return 9 / 41 ticks" time="0" classname="Should return 9 / 41 ticks">
+    </testcase>
+    <testcase name="Charts Rendering # Tick Formatting Should return 10 / 50 ticks" time="0" classname="Should return 10 / 50 ticks">
+    </testcase>
+  </testsuite>
+</testsuites>

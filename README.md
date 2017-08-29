@@ -9,6 +9,4 @@ Still WIP - working on better display + need to update data + deploy
 Where do i put this damn legend  
 Once add new semester data - remove hardcoded max min input dates and have it update on semester change  
 different colored labels/ticks/lines for weekends  
-look over scrape script  
-more unit tests???
-remove depenencies on bootstrap - only button and font styles i believe    
+research ansible more - prolly just make a shell setup script  

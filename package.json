@@ -7,7 +7,7 @@
     "start": "node app.js",
     "unit-test": "mocha test/unit_test.js",
     "integration-test": "mocha test/integration_test.js",
-    "xmltest": "mocha --reporter mocha-junit-reporter",
+    "xmltest": "MOCHA_FILE=./test/test-results.xml mocha --reporter mocha-junit-reporter",
     "lint": "eslint app.js public/js/**/*.js routes/**/*.js test/**/*.js"
   },
   "repository": {
