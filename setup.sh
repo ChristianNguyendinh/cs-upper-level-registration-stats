@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Install for MAC and Linux (Currently just Ubuntu)
 # Mac requires Homebrew to be installed
@@ -6,18 +6,18 @@
 # Clone or DL the repo then run this script to set up node
 
 echo "Starting Setup Script"
-echo "\n===================================\n"
+echo "==================================="
 
 
-if [ "$EUID" -ne 0 ]
+if [[ "$EUID" -ne 0 ]]
 then
-	echo "\nRUN AS ROOT!!!\n"
+	echo "RUN AS ROOT!!!"
 	exit 2
 fi
 
 OSNAME="$(uname)"
 
-if [ $OSNAME == "Linux" ]
+if [[ $OSNAME == "Linux" ]]
 then
 	echo "Detected Linux OS - Assuming Ubuntu"
 	echo "Installing System Dependencies"
@@ -26,7 +26,7 @@ then
 	apt-get install -y nodejs
 	apt-get install -y sqlite3
 
-elif [ $OSNAME == "Darwin" ]
+elif [[ $OSNAME == "Darwin" ]]
 then
 	echo "Detected Mac System - Homebrew must be installed"
 	echo "Installing System Dependencies"
@@ -38,19 +38,19 @@ else
 	exit 3
 fi
 
-echo "\n===================================\n"
+echo "==================================="
 
 echo "Outputting Versions"
 echo "NodeJS version - $(node --version)"
 echo "npm version - $(npm --version)"
 echo "sqlite3 version - $(sqlite3 --version)"
 
-echo "\n===================================\n"
+echo "==================================="
 
 echo "Installing Node Dependencies"
 npm install
 
-echo "\n===================================\n"
+echo "==================================="
 
 echo "Setup Script Ending - npm run start or node app.js to start the webserver"
 
