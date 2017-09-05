@@ -167,6 +167,11 @@ function genChart(data, className) {
                 .attr("fill", colorArray[index])
                 .attr("class", "dot dot-" + element)
                 .on("mouseover", function(d) {
+                    tooltip.remove();
+                    tooltip = d3.select("body").append("div")
+                        .attr("class", "tooltip")
+                        .style("opacity", 0);
+
                     tooltip.transition()
                         .duration(200)
                         .style("opacity", 0.9);

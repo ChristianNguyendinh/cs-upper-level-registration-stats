@@ -8,7 +8,7 @@
     "unit-test": "mocha test/unit_test.js",
     "integration-test": "mocha test/integration_test.js",
     "xmltest": "MOCHA_FILE=./test/test-results.xml mocha --reporter mocha-junit-reporter",
-    "lint": "eslint app.js public/js/**/*.js routes/**/*.js test/**/*.js"
+    "lint": "eslint app.js public/js/**/*.js routes/**/*.js test/**/*.js config/**/*.js"
   },
   "repository": {
     "type": "git",

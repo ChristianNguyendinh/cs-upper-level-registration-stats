@@ -9,7 +9,7 @@ router.get("/*", function(req, res, next) {
         next();
     }
     else {
-    	res.statusCode = 406;
+        res.statusCode = 406;
         res.send("Invalid Semseter");
     }
 });

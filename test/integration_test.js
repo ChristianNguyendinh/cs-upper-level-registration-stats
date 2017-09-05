@@ -1,6 +1,6 @@
 var assert = require("assert");
 var request = require("supertest");
-var app = require("../app.js")
+var app = require("../app.js");
 
 describe("Semester Validation", function() {
     it("should work with a valid semester", function(done) {
@@ -66,7 +66,7 @@ describe("API calls", function() {
             ];
 
             // deconstruct each course object formatted for autocomplete
-            var recieved_courselist = res.body.map(function(courseObj) { return courseObj['value'] });
+            var recieved_courselist = res.body.map(function(courseObj) { return courseObj["value"]; });
 
             for (var course of expected_courselist) {
                 // check if each expected course was recieved
