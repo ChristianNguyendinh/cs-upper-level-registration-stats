@@ -9,8 +9,16 @@ const db = new sqlite3.Database(__dirname + "/data/courses.db");
 
 var semester = "test1";
 
+// For printing with timestamp
+function printInfo(msg) {
+    var dt = new Date().toString().substring(0, 24);
+    console.log(dt + " >> " + msg);
+}
+
 // Srape the data, print out optionally, TODO: Save in DB and email
 function collectData() {
+    console.log("===============================");
+    printInfo("Data Script Starting");
 
     var basic_upper_levels = ["CMSC411", "CMSC412", "CMSC414", "CMSC417", 
         "CMSC420", "CMSC421", "CMSC422", "CMSC423", "CMSC424", 
@@ -83,7 +91,8 @@ function collectData() {
 function loadData(dataObj, totalSections, dataString) {
     let currDate = new Date();
     let dateString = "";
-    dateString += currDate.getMonth() < 10 ? "0" + currDate.getMonth().toString() : currDate.getMonth().toString();
+    let month = currDate.getMonth() + 1;
+    dateString += month < 10 ? "0" + month.toString() : month.toString();
     dateString += "-" + currDate.getDate().toString();
     dateString += "-" + currDate.getFullYear().toString();
 
@@ -118,7 +127,11 @@ function loadData(dataObj, totalSections, dataString) {
                     (err, row) => {
                         curr++;
                         if (curr >= totalSections) {
+                            printInfo("DB Successfully Loaded!");
                             saveLogs(dataString, dateString);
+                        }
+                        if (err) {
+                            printInfo("DB Load FAILED! ERROR : " + err);
                         }
                     }
                 );
@@ -129,19 +142,19 @@ function loadData(dataObj, totalSections, dataString) {
 }
 
 function saveLogs(dataString, date) {
+    var filepath = __dirname + "/logs/" + date + "_stats.txt";
     fs.writeFile(__dirname + "/logs/" + date + "_stats.txt", dataString, function(err) {
         if (err) {
-            return console.error(err);
+            return printInfo("Log Save FAILED! ERROR : " + err);
         }
-
-        console.log("Log Saved!");
+        printInfo("Log Saved! at " + filepath);
+        cleanup();
     });
-
-    cleanup();
 }
 
 function cleanup() {
-    console.log("Data Collected!");
+    printInfo("Data Scrape Ending");
+    console.log("===============================");
 }
 
 function run() {
