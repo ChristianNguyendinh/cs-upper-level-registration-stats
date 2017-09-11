@@ -10,7 +10,7 @@ const Dropbox = require("dropbox");
 // const pg = require("pg");
 // const conString = process.env.DATABASE_URL || "postgres://localhost:5432/christian";
 
-var semester = "test1";
+var semester = config.actualSemester;
 
 // For printing with timestamp
 function printInfo(msg) {
@@ -125,7 +125,7 @@ function loadData(dataObj, totalSections, dataString) {
             dataObj[course].forEach(function(section) {
                 // console.log(course + " " + section.section + " " + section.total + " " + section.open + " " + section.waitlist);
 
-                db.run("INSERT INTO " + semester + " (course, section, open, total, waitlist, date) VALUES ($1, $2, $3, $4, $5, $6);",
+                db.run("INSERT INTO \"" + semester + "\" (course, section, open, total, waitlist, date) VALUES ($1, $2, $3, $4, $5, $6);",
                     [course, section.section, section.open, section.total, section.waitlist, dateString],
                     (err, row) => {
                         curr++;
@@ -167,7 +167,7 @@ function uploadLogs(dataString, date) {
             printInfo("Log Uploaded to DropBox! at " + uploadPath);
             cleanup();
         }).catch((error) => {
-            printInfo("Log Upload FAILED! ERROR : " + error);
+            printInfo("Log Upload FAILED! ERROR : " + error.message);
         });
 }
 
