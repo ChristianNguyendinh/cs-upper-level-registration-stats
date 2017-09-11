@@ -1,11 +1,14 @@
-const fs = require('fs');
-const request = require('request');
-const cheerio = require('cheerio');
+const fs = require("fs");
+const request = require("request");
+const cheerio = require("cheerio");
 const MANUAL_MODE = process.argv[2];
 const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database(__dirname + "/data/courses.db");
-// const pg = require('pg');
-// const conString = process.env.DATABASE_URL || 'postgres://localhost:5432/christian';
+const config = require(__dirname + "/config/settings.js");
+const Dropbox = require("dropbox");
+
+// const pg = require("pg");
+// const conString = process.env.DATABASE_URL || "postgres://localhost:5432/christian";
 
 var semester = "test1";
 
@@ -29,44 +32,44 @@ function collectData() {
     // String representation of data for manual extraction and emailing
     var dataString = "";
     // Object representation of data for storage
-    var dataObject = {}
+    var dataObject = {};
     var totalSections = 0;
 
     // USING THEIR API
     request.get(
         {
-            'baseUrl': "https://ntst.umd.edu/",
-            'url': "soc/201708/sections?courseIds=" + upper_level_list,
+            "baseUrl": "https://ntst.umd.edu/",
+            "url": "soc/201708/sections?courseIds=" + upper_level_list,
         },
         function(err, res, body) {
             var $ = cheerio.load(body);
             dataString += "---------------\n";
 
-            $('.course-sections').each(function(i, elem) {
-                var courseId = $(this)[0]['attribs']['id'];
+            $(".course-sections").each(function(i, elem) {
+                var courseId = $(this)[0]["attribs"]["id"];
                 dataString += courseId + "\n";
                 dataString += "---------------\n\n";
                 dataObject[courseId] = [];
 
-                $(this).find('.section-info-container').each(function(i, elem) {
+                $(this).find(".section-info-container").each(function(i, elem) {
                     var sectionObject = {};
-                    var sectionName = $(this).find('.section-id').text().trim();
-                    dataString += "Section: " + $(this).find('.section-id').text().trim() + "\n";
-                    sectionObject['section'] = sectionName; 
+                    var sectionName = $(this).find(".section-id").text().trim();
+                    dataString += "Section: " + $(this).find(".section-id").text().trim() + "\n";
+                    sectionObject["section"] = sectionName; 
 
-                    var totalSeats = $(this).find('.total-seats-count').text().trim()
+                    var totalSeats = $(this).find(".total-seats-count").text().trim();
                     dataString += "Total Seats: " + totalSeats + "\n";
-                    sectionObject['total'] = totalSeats;
+                    sectionObject["total"] = totalSeats;
 
-                    var openSeats = $(this).find('.open-seats-count').text().trim();
+                    var openSeats = $(this).find(".open-seats-count").text().trim();
                     dataString += "Open Seats: " + openSeats + "\n";
-                    sectionObject['open'] = openSeats;
+                    sectionObject["open"] = openSeats;
 
-                    $(this).find('.waitlist-count').each(function(i, elem) {
+                    $(this).find(".waitlist-count").each(function(i, elem) {
                         if (i == 0) { // only want waitlist, not holdfile
                             var waitlistCount = $(this).text();
                             dataString += "Waitlist: " + waitlistCount + "\n" + "\n";
-                            sectionObject['waitlist'] = waitlistCount;
+                            sectionObject["waitlist"] = waitlistCount;
                         }
                     });
 
@@ -104,7 +107,7 @@ function loadData(dataObj, totalSections, dataString) {
     //     Object.keys(dataObj).forEach(function(course) {
     //         dataObj[course].forEach(function(section) {
     //             // console.log(course + " " + section.section + " " + section.total + " " + section.open + " " + section.waitlist);
-    //             client.query('INSERT INTO courses (course, section, open, total, waitlist, date) VALUES ($1, $2, $3, $4, $5, $6);',
+    //             client.query("INSERT INTO courses (course, section, open, total, waitlist, date) VALUES ($1, $2, $3, $4, $5, $6);",
     //                 [course, section.section, section.open, section.total, section.waitlist, dateString])
     //             .then(() => {
     //                 curr++;
@@ -128,7 +131,8 @@ function loadData(dataObj, totalSections, dataString) {
                         curr++;
                         if (curr >= totalSections) {
                             printInfo("DB Successfully Loaded!");
-                            saveLogs(dataString, dateString);
+                            // saveLogs(dataString, dateString);
+                            uploadLogs(dataString, dateString);
                         }
                         if (err) {
                             printInfo("DB Load FAILED! ERROR : " + err);
@@ -141,7 +145,7 @@ function loadData(dataObj, totalSections, dataString) {
     });
 }
 
-function saveLogs(dataString, date) {
+function saveLocalLogs(dataString, date) {
     var filepath = __dirname + "/logs/" + date + "_stats.txt";
     fs.writeFile(__dirname + "/logs/" + date + "_stats.txt", dataString, function(err) {
         if (err) {
@@ -150,6 +154,21 @@ function saveLogs(dataString, date) {
         printInfo("Log Saved! at " + filepath);
         cleanup();
     });
+}
+
+// upload logs to dropbox
+function uploadLogs(dataString, date) {
+    var uploadPath = "/" + config.actualSemester + "/" + date + "_stats.txt";
+
+    var dbx = new Dropbox({ accessToken: config.DROPBOX_TOKEN });
+
+    dbx.filesUpload({ path: uploadPath, contents: dataString })
+        .then((response) => {
+            printInfo("Log Uploaded to DropBox! at " + uploadPath);
+            cleanup();
+        }).catch((error) => {
+            printInfo("Log Upload FAILED! ERROR : " + error);
+        });
 }
 
 function cleanup() {
@@ -164,7 +183,7 @@ function run() {
             process.exit(4);
         }
     } else {
-        console.error("Too many arguments. Expected 1 (-p or --print) or 0")
+        console.error("Too many arguments. Expected 1 (-p or --print) or 0");
     }
 
     collectData();
