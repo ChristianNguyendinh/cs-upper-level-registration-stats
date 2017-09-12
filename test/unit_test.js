@@ -1,6 +1,7 @@
 var assert = require("assert");
 var charts = require("../public/js/charts.js");
 
+// Helper to format the ticks for assertions
 function runFormatTicks(data) {
     var result = [];
     var len = data.length;
@@ -14,6 +15,7 @@ function runFormatTicks(data) {
     return result;
 }
 
+// Ensure charts.formatTick correctly displays number of ticks given a number of dates
 describe("Charts Rendering", function() {
 
     describe("# Tick Formatting", function() {
@@ -71,3 +73,6 @@ describe("Charts Rendering", function() {
     });
 
 });
+
+// Not sure what other methods to test... we done have that many...
+

@@ -1,3 +1,14 @@
+/*
+
+Scrapes Data via the api that populates UMD course list page
+Methods thats print out the data, store data in the DB,
+write the data to a local log file, and upload the data to
+dropbox
+
+Currently stores data in the DB, then uploads the data to dropbox
+
+*/
+
 const fs = require("fs");
 const request = require("request");
 const cheerio = require("cheerio");
@@ -10,6 +21,7 @@ const Dropbox = require("dropbox");
 // const pg = require("pg");
 // const conString = process.env.DATABASE_URL || "postgres://localhost:5432/christian";
 
+// Determines the corresponding table name to write data to
 var semester = config.actualSemester;
 
 // For printing with timestamp
@@ -91,6 +103,7 @@ function collectData() {
     );
 }
 
+// Load data into SQLite3 DB. Commented out Postgres version
 function loadData(dataObj, totalSections, dataString) {
     let currDate = new Date();
     let dateString = "";
@@ -145,6 +158,7 @@ function loadData(dataObj, totalSections, dataString) {
     });
 }
 
+// Save logs locally to the log folder
 function saveLocalLogs(dataString, date) {
     var filepath = __dirname + "/logs/" + date + "_stats.txt";
     fs.writeFile(__dirname + "/logs/" + date + "_stats.txt", dataString, function(err) {
@@ -171,11 +185,13 @@ function uploadLogs(dataString, date) {
         });
 }
 
+// Use to be more useful i swear
 function cleanup() {
     printInfo("Data Scrape Ending");
     console.log("===============================");
 }
 
+// Begin execution of the program - validate optional parameters
 function run() {
     if (process.argv.length <= 3) {
         if (MANUAL_MODE && (MANUAL_MODE != "-p" && MANUAL_MODE != "--print")) {

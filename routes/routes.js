@@ -1,10 +1,14 @@
+/*
+Master router for non-trivial urls
+*/
+
 var express = require("express");
-var router = express.Router({ mergeParams: true});
+var router = express.Router({ mergeParams: true });
 var api = require("./api.js");
 var config = require("../config/settings.js");
 
+// validate that the semester given is an actual semester code with data
 router.get("/*", function(req, res, next) {
-    // validate that the semester given is an actual semester code with data
     if (config.semesters.includes(req.params.semester)) {
         next();
     }
@@ -14,6 +18,7 @@ router.get("/*", function(req, res, next) {
     }
 });
 
+// Pass the API routes off to the api routing file
 router.get("/stats", api.stats);
 
 router.get("/course/:name", api.singleCourse);

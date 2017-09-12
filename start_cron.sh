@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Start a cronjob to run the scrape script daily
+
 # Get full directory of this script
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 

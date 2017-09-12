@@ -2,33 +2,34 @@ var assert = require("assert");
 var request = require("supertest");
 var app = require("../app.js");
 
+// Validate that invalid/valid semesters in the url are handled properly
 describe("Semester Validation", function() {
-    it("should work with a valid semester", function(done) {
+    it("should work (200) with a valid semester", function(done) {
         request(app).get("/api/201701/courselist").end(function(err, res) {
             assert.equal(res.statusCode, 200);
             done();
         });
     });
-    it("should 406 with a invalid semester", function(done) {
+    it("should 406 (Not Acceptable) with a invalid semester", function(done) {
         request(app).get("/api/201702/courselist").end(function(err, res) {
             assert.equal(res.statusCode, 406);
             done();
         });
     });
-    it("should 406 with a semester not added yet", function(done) {
+    it("should 406 (Not Acceptable) with a semester not added yet", function(done) {
         request(app).get("/api/201708/courselist").end(function(err, res) {
             assert.equal(res.statusCode, 406);
             done();
         });
     });
-    it("should 404 with a invalid semester format", function(done) {
+    it("should 404 (Not Found) with a invalid semester format", function(done) {
         request(app).get("/api/2017001/courselist").end(function(err, res) {
             assert.equal(res.statusCode, 404);
             done();
         });
     });
 
-    it("should 404 with another invalid semester format", function(done) {
+    it("should 404 (Not Found) with another invalid semester format", function(done) {
         request(app).get("/api/2017O1/courselist").end(function(err, res) {
             assert.equal(res.statusCode, 404);
             done();
@@ -36,6 +37,7 @@ describe("Semester Validation", function() {
     });
 });
 
+// Tests out some API calls. Still a WIP
 describe("API calls", function() {
     it("should return expected semesters", function(done) {
         request(app).get("/api/semesterlist").end(function(err, res) {

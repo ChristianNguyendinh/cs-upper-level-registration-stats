@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Install for MAC and Linux (Currently just Ubuntu)
+# Install Dependencies for MAC and Linux (Currently just Ubuntu)
 # Mac requires Homebrew to be installed
 # Expects to be in the project root
 # Clone or DL the repo then run this script to set up node

@@ -1,3 +1,8 @@
+/*
+Routes for the API. URL validity has been verified at this point. Req.params.semester
+has also been set and is good to use.
+*/
+
 var sqlite3 = require("sqlite3").verbose();
 var db = new sqlite3.Database("data/courses.db");
 

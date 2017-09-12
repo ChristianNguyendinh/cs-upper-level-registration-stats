@@ -1,9 +1,15 @@
+/*
+D3 methods for rendering, updating, and formatting the line charts displayed at the
+/charts url. There are some redundancies that may need to be refactored
+*/
+
 var margin;
 var width;
 var height;
 var tooltip;
 var colorArray;
 
+// Initialize shared properties/elements for charts
 function init() {
     // Dimensions of graph
     margin = {top: 125, right: 20, bottom: 40, left: 80};
@@ -84,6 +90,7 @@ function genChart(data, className) {
     var dates = lineChartData[keyArray[0]].map(function(d) { return d.date; });
     scaleLineX.domain(dates);
 
+    // Get the maximum number of open seats throughout all the sections given
     var maxY = d3.max(keyArray, 
         function(d) { 
             return d3.max(lineChartData[d], function(d1) { return parseInt(d1["open"]); });
@@ -116,6 +123,7 @@ function genChart(data, className) {
             .attr("font-size", "40");
 
     // Background grid
+    // Vertical lines
     lineChartData[keyArray[0]].forEach(function(day) {
         lineChart.append("line")
             .attr("x1", scaleLineX(day["date"]))
@@ -125,7 +133,7 @@ function genChart(data, className) {
             .attr("stroke", "grey")
             .attr("class", "background-line");
     });
-
+    // Horizontal lines
     scaleLineY.ticks().forEach(function(label) {
         lineChart.append("line")
             .attr("x1", 0)
@@ -201,12 +209,13 @@ function genChart(data, className) {
             .html(element);
     });
 
+    // Have a fade in
     container.transition()
         .duration(1000)
         .style("opacity", 1);
 
+    // Translate labels so they dont intersect with axes
     positionLabels(lineChart);
-
 
 }
 
@@ -333,6 +342,7 @@ function updateChart(lineChartData, id) {
     positionLabels(lineChart);
 }
 
+// Slide labels over so they dont overlap with chart
 function positionLabels(lc) {
     lc.selectAll(".x")
         .selectAll("text")
@@ -343,6 +353,7 @@ function positionLabels(lc) {
             .attr("dx", "-10px");
 }
 
+// Try a module export for unit testing
 try {
     module.exports = {
         formatTick: formatTick
