@@ -10,8 +10,8 @@ too bad.
 
 module.exports = {
     env : "develop", 
-    semesters : ["201701"],
-    currentSemester : "201701",
-    actualSemester : "201705",
+    semesters : ["201708"],
+    currentSemester : "201708",
+    actualSemester : "201712",
     DROPBOX_TOKEN : "< YOUR TOKEN HERE >",
 };

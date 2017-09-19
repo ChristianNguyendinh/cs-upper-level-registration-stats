@@ -5,7 +5,7 @@ var app = require("../app.js");
 // Validate that invalid/valid semesters in the url are handled properly
 describe("Semester Validation", function() {
     it("should work (200) with a valid semester", function(done) {
-        request(app).get("/api/201701/courselist").end(function(err, res) {
+        request(app).get("/api/201708/courselist").end(function(err, res) {
             assert.equal(res.statusCode, 200);
             done();
         });
@@ -17,7 +17,7 @@ describe("Semester Validation", function() {
         });
     });
     it("should 406 (Not Acceptable) with a semester not added yet", function(done) {
-        request(app).get("/api/201708/courselist").end(function(err, res) {
+        request(app).get("/api/201701/courselist").end(function(err, res) {
             assert.equal(res.statusCode, 406);
             done();
         });
@@ -44,7 +44,7 @@ describe("API calls", function() {
             assert.equal(res.statusCode, 200);
             assert(Array.isArray(res.body));
 
-            var expected_semesterlist = ["201701"];
+            var expected_semesterlist = ["201708"];
             var recieved_semesterlist = res.body;
 
             for (var semester of expected_semesterlist) {
@@ -56,7 +56,7 @@ describe("API calls", function() {
         });
     });
     it("should return expected courses", function(done) {
-        request(app).get("/api/201701/courselist").end(function(err, res) {
+        request(app).get("/api/201708/courselist").end(function(err, res) {
             assert.equal(res.statusCode, 200);
             assert(Array.isArray(res.body));
 
