@@ -22,12 +22,12 @@
     <h2>Search for a Course:</h2>
     <form id="search-form" onsubmit="onCourseSearch(); return false;" style="text-align:center;">
         <div style="display: inline-block; width: 100%; height: 100%;">
-            <input type="text" id="search-box" style="width: 50%" required></input>
+            <input type="text" id="search-box" style="width: 50%" placeholder="Search... (Ex. CMSC412)" required></input>
             <button type="submit" class="red-button" id="search-button" style="padding: 5px 10px">Search</button>
         </div>
     </form>
     <div style="width: 80%; margin: 3% 10%">
-        <form id="time-form" onsubmit="onRefresh(); return false;" style="float: left; width: 50%">
+        <form id="time-form" onsubmit="onRefresh(); return false;" style="float: left; width: 50%; min-width: 300px;">
             <div style="width: 100%; height: 100%; text-align: center;">
                 <div style="float:left">
                     <div>
