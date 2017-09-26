@@ -6,6 +6,8 @@
 
     <link rel="stylesheet" href="/css/charts.css">
 
+    <title>UMD CS Upper Level Registration Tracker - Charts</title>
+
     <style>
         #nav-chart {
             border-bottom: 4px solid black;
@@ -54,7 +56,7 @@
             </div>
         </form>
 
-        <div style="float: right">
+        <div style="float: right; margin: 15px 5px;">
             <button class="test layout-btn" id="top-layout-btn" style="border-top-right-radius: 0; border-bottom-right-radius: 0; float: left;" onclick="changeLayout(this)">
                 <img src="/img/glyphicon-rows.png" height="22px"/>
             </button>
@@ -120,6 +122,9 @@
         function onRefresh() {
             var startVal = $("#start-time").val();
             var endVal = $("#end-time").val();
+
+            if (startVal > endVal)
+                return;
 
             // update values from form
             startDate = startVal.substring(5) + "-" + startVal.substring(2, 4);
