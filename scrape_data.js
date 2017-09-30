@@ -30,17 +30,46 @@ function printInfo(msg) {
     console.log(dt + " >> " + msg);
 }
 
+function getClassList() {
+    request.get(
+        {
+            "baseUrl": "https://ntst.umd.edu/",
+            "url": "soc/" + semester + "/CMSC",
+        },
+        function(err, res, body) {
+            if (err) return console.log(err);
+
+            var $ = cheerio.load(body);
+            var classArray = [];
+            var total = $(".course-id").length;
+            var current = 0;
+
+            var p = new Promise(function(resolve, reject) {
+                $(".course-id").each(function(i, elem) {
+                    var course = elem.children[0].data;
+                    setTimeout(function () {
+                        if (course.match(/^CMSC[43][\d\w]{2}$/) || course.match(/^CMSC[3][\d]{2}[\w]$/)) {
+                            classArray.push(course);
+                        }
+                        current++;
+                        if (current == total) {
+                            resolve()
+                        }
+                    }, 500)
+                });
+            }).then(function(success) {
+                collectData(classArray)
+            }); 
+        }
+    );
+}
+
 // Srape the data, print out optionally, TODO: Save in DB and email
-function collectData() {
+function collectData(classArray) {
     console.log("===============================");
     printInfo("Data Script Starting");
 
-    var basic_upper_levels = ["CMSC411", "CMSC412", "CMSC414", "CMSC417", 
-        "CMSC420", "CMSC421", "CMSC422", "CMSC423", "CMSC424", 
-        "CMSC426", "CMSC430", "CMSC433", "CMSC434", "CMSC435", 
-        "CMSC436", "CMSC451", "CMSC460", "CMSC466", "CMSC474"];
-
-    var upper_level_list = basic_upper_levels.join(",");
+    var upper_level_list = classArray.join(",");
     // String representation of data for manual extraction and emailing
     var dataString = "";
     // Object representation of data for storage
@@ -51,7 +80,7 @@ function collectData() {
     request.get(
         {
             "baseUrl": "https://ntst.umd.edu/",
-            "url": "soc/201708/sections?courseIds=" + upper_level_list,
+            "url": "soc/" + semester + "/sections?courseIds=" + upper_level_list,
         },
         function(err, res, body) {
             var $ = cheerio.load(body);
@@ -202,7 +231,7 @@ function run() {
         console.error("Too many arguments. Expected 1 (-p or --print) or 0");
     }
 
-    collectData();
+    getClassList();
 }
 
 run();
