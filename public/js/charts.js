@@ -183,7 +183,7 @@ function genChart(data, className) {
                     tooltip.transition()
                         .duration(200)
                         .style("opacity", 0.9);
-                    tooltip.html("Date: " + d.date + "<br/>" + "Seats Open: <b>" + d.open + "</b>")
+                    tooltip.html("Date: <b>" + d.date + "</b><br/>" + "Seats Open: <b>" + d.open + "</b><br/>" + "Total Seats: <b>" + d.total + "</b>")
                         .style("left", (d3.event.pageX) + "px")
                         .style("top", (d3.event.pageY) + "px");
                 })
