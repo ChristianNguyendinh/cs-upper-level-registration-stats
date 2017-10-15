@@ -22,7 +22,7 @@ const Dropbox = require("dropbox");
 // const conString = process.env.DATABASE_URL || "postgres://localhost:5432/christian";
 
 // Determines the corresponding table name to write data to
-var semester = config.actualSemester;
+var semesters = config.activeSemesters;
 
 // For printing with timestamp
 function printInfo(msg) {
@@ -30,7 +30,7 @@ function printInfo(msg) {
     console.log(dt + " >> " + msg);
 }
 
-function getClassList() {
+function getClassList(semester) {
     request.get(
         {
             "baseUrl": "https://ntst.umd.edu/",
@@ -48,7 +48,8 @@ function getClassList() {
                 $(".course-id").each(function(i, elem) {
                     var course = elem.children[0].data;
                     setTimeout(function () {
-                        if (course.match(/^CMSC[43][\d\w]{2}$/) || course.match(/^CMSC[3][\d]{2}[\w]$/)) {
+                        // Match 400s and 300s with digit at the end (special topics or whatever)
+                        if (course.match(/^CMSC4[\d\w]{2}$/) || course.match(/^CMSC[3][\d]{2}[A-Z]$/)) {
                             classArray.push(course);
                         }
                         current++;
@@ -58,14 +59,14 @@ function getClassList() {
                     }, 500)
                 });
             }).then(function(success) {
-                collectData(classArray)
+                collectData(classArray, semester)
             }); 
         }
     );
 }
 
 // Srape the data, print out optionally, TODO: Save in DB and email
-function collectData(classArray) {
+function collectData(classArray, semester) {
     console.log("===============================");
     printInfo("Data Script Starting");
 
@@ -125,7 +126,7 @@ function collectData(classArray) {
             if (MANUAL_MODE) {
                 console.log(dataString);
             } else {
-                loadData(dataObject, totalSections, dataString);
+                loadData(dataObject, totalSections, dataString, semester);
             }
 
         }
@@ -133,7 +134,7 @@ function collectData(classArray) {
 }
 
 // Load data into SQLite3 DB. Commented out Postgres version
-function loadData(dataObj, totalSections, dataString) {
+function loadData(dataObj, totalSections, dataString, semester) {
     let currDate = new Date();
     let dateString = "";
     let month = currDate.getMonth() + 1;
@@ -174,7 +175,7 @@ function loadData(dataObj, totalSections, dataString) {
                         if (curr >= totalSections) {
                             printInfo("DB Successfully Loaded!");
                             // saveLogs(dataString, dateString);
-                            uploadLogs(dataString, dateString);
+                            uploadLogs(dataString, dateString, semester);
                         }
                         if (err) {
                             printInfo("DB Load FAILED! ERROR : " + err);
@@ -200,8 +201,8 @@ function saveLocalLogs(dataString, date) {
 }
 
 // upload logs to dropbox
-function uploadLogs(dataString, date) {
-    var uploadPath = "/" + config.actualSemester + "/" + date + "_stats.txt";
+function uploadLogs(dataString, date, semester) {
+    var uploadPath = "/" + semester + "/" + date + "_stats.txt";
 
     var dbx = new Dropbox({ accessToken: config.DROPBOX_TOKEN });
 
@@ -231,7 +232,9 @@ function run() {
         console.error("Too many arguments. Expected 1 (-p or --print) or 0");
     }
 
-    getClassList();
+    for (var s of semesters) {
+        getClassList(s);      
+    }
 }
 
 run();
