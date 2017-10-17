@@ -29,4 +29,8 @@ router.get("/recent/:name", api.recent);
 
 router.get("/courselist", api.list);
 
+router.get("/dates", function(req, res) {
+    res.json(config.semesterDates[req.params.semester]);
+});
+
 module.exports = router;

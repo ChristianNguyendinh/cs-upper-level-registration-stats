@@ -45,7 +45,7 @@
                 <div style="float:right">
                     Semester: 
                     <br />
-                    <select id="semester-select">
+                    <select id="semester-select" onchange="semesterChange(this)">
                     </select>
                 </div>
 
@@ -172,16 +172,7 @@
             }
         }
 
-        // set default semester to be current
-        var setSemester = new Promise(function(resolve, reject) {
-            d3.json("/api/currentsemester", function(data) {
-                semester = data['currentSemester'];
-                resolve();
-            });
-        });
-
-        // initialize search box for autocomplete and validation
-        setSemester.then(function() {
+        function updateAutoComplete() {
             d3.json("/api/" + semester + "/courselist", function(data) {
                 var searchBox = $("#search-box");
 
@@ -203,16 +194,54 @@
 
                 searchBox.attr("pattern", regex);
             });
+        }
+
+        function updateDates() {
+            d3.json("/api/" + semester + "/dates", function(data) {
+                var startnode = document.getElementById("start-time");
+                var endnode = document.getElementById("end-time");
+                startnode.setAttribute("min", data['start']);
+                startnode.setAttribute("max", data['end']);
+                endnode.setAttribute("min", data['start']);
+                endnode.setAttribute("max", data['end']);
+            });
+        }
+
+        function semesterChange(obj) {
+            // update semester, dates, autocomplete, and remove charts
+            semester = obj.value;
+            updateAutoComplete();
+            updateDates();
+            var chartlist = document.getElementsByClassName("chart-container");
+            while(chartlist[0]) {
+                chartlist[0].remove();
+            }
+        }
+
+        // set default semester to be current
+        var setSemester = new Promise(function(resolve, reject) {
+            d3.json("/api/currentsemester", function(data) {
+                semester = data['currentSemester'];
+                resolve();
+            });
+        });
+
+        // initialize search box for autocomplete and validation
+        setSemester.then(function() {
+            updateAutoComplete();
+            updateDates();
         });
 
         // initialize semester list
         d3.json("/api/semesterlist", function(data) {
             var semesterlist = $("#semester-select");
 
-            for (var semester of data) {
+            for (var sem of data) {
                 var option = document.createElement("option");
-                option.value = semester;
-                option.innerHTML = semester;
+                option.value = sem;
+                option.innerHTML = sem;
+                if (sem == semester)
+                    option.selected = true;
 
                 semesterlist.append(option);
             }
