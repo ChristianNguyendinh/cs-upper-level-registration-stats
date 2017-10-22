@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
+    "start-production": "sudo PORT=80 node app.js >> server.log &",
     "cron": "./start_cron.sh",
     "unit-test": "mocha test/unit_test.js",
     "integration-test": "mocha test/integration_test.js",

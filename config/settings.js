@@ -18,8 +18,8 @@ module.exports = {
     // Mark start and end dates of semester somehow? to get valid date range for date picker in front end
     semesterDates : {
         "201708": { start: "2017-03-30", end: "2017-04-22" },
-        "201712": { start: "2017-10-24", end: "2018-01-22" },
-        "201801": { start: "2017-11-02", end: "2018-02-01" },
+        "201712": { start: "2017-10-23", end: "2018-01-25" },
+        "201801": { start: "2017-11-01", end: "2018-02-01" },
     },
     DROPBOX_TOKEN : "< YOUR TOKEN HERE >",
 };
