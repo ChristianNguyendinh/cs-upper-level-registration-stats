@@ -3,6 +3,25 @@ const cheerio = require("cheerio");
 const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database(__dirname + "/secrettest.db");
 
+function wait() {
+    var i = 0;
+    /*
+    We want to run something on all elements of a function, but have it wait between each one.
+    A raw setTimeout function will all be kicked off relatively at the same time by a for loop,
+    so they will all execute at relatively the same time.
+    So, we return a closure and every time the inner function is called, it waits by one more second.
+    Thus with all functions being kicked off around the same time, the first would wait 1 sec, second
+    2 secs, etc... making a one sec different between each call
+    */
+    return function(semester, cid) {
+        i += 1;
+        setTimeout(() => { 
+            console.log("Getting info for: " + cid);
+            getInfo(semester, cid);
+        }, 3000 * i);
+    }
+}
+
 function getCategories(semester) {
     request.get(
         {
@@ -62,10 +81,11 @@ function getClassids(semester, category) {
                     }
                 });
             }).then(function(success) {
+                var delay = wait();
+
                 for (var c of courses) {
-                    console.log(c)
+                    delay(semester, c);
                 }
-                // Call get info for eac thing inside of courses
 
             }); 
         }
@@ -187,4 +207,12 @@ function storeInfo(parsedArr) {
 
 // getCategories > getClassids (for each) > getInfo > parseInfo > storeInfo
 // BMGT340, ASTR230, EDCP108M
-getClassids("201801", "CMSC");
+// getClassids("201801", "CMSC");
+
+var args = process.argv.slice(2);
+// for now expect one argument of the class category (ex. CMSC) we want
+if (args.length == 1) {
+    getClassids("201801", args[0]);
+} else {
+    console.error("Invalid arguments");
+}
