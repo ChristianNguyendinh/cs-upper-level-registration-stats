@@ -127,14 +127,15 @@
                 return;
 
             // update values from form
-            startDate = startVal.substring(5) + "-" + startVal.substring(2, 4);
-            endDate = endVal.substring(5) + "-" + endVal.substring(2, 4);
+            startDate = startVal.substring(5) + "-" + startVal.substring(0, 4);
+            endDate = endVal.substring(5) + "-" + endVal.substring(0, 4);
             semester = $("#semester-select :selected").text();
 
             $("#info-title").html("Data for: <i>" + startDate + "</i> to <i>" + endDate + "</i>");
 
             // date objects dont convert str to date x browser well, so just use strings
             dateString = startDate + "_" + endDate;
+            console.log(dateString)
 
             // refresh the already drawn classes
             for (var course of searchedCourses) {
@@ -142,6 +143,7 @@
                     // need a new variable because variable 'course' will be overriden one loop moves
                     // while this function is still asnyc running
                     var courseName = Object.keys(data)[0];
+                    console.log(data)
                     updateChart(data[courseName], courseName);
                 });
             }
@@ -200,10 +202,25 @@
             d3.json("/api/" + semester + "/dates", function(data) {
                 var startnode = document.getElementById("start-time");
                 var endnode = document.getElementById("end-time");
+
+                var d = new Date()
+                var currentDate = (new Date(d.getTime() - (d.getTimezoneOffset() * 60000))).toISOString().slice(0, 10);
+
                 startnode.setAttribute("min", data['start']);
-                startnode.setAttribute("max", data['end']);
                 endnode.setAttribute("min", data['start']);
-                endnode.setAttribute("max", data['end']);
+
+                if (data['end'] < currentDate) {
+                    startnode.setAttribute("max", data['end']);
+                    endnode.setAttribute("max", data['end']);
+                }
+                else {
+
+                    startnode.setAttribute("max", currentDate);
+                    endnode.setAttribute("max", currentDate);
+                }
+
+                startnode.value = "";
+                endnode.value = "";
             });
         }
 
@@ -213,6 +230,8 @@
             updateAutoComplete();
             updateDates();
             var chartlist = document.getElementsByClassName("chart-container");
+            searchedCourses = new Set();
+
             while(chartlist[0]) {
                 chartlist[0].remove();
             }

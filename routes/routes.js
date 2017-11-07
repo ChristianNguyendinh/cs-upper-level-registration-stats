@@ -23,7 +23,7 @@ router.get("/stats", api.stats);
 
 router.get("/course/:name", api.singleCourse);
 
-router.get("/:course/((\\d\\d-\\d\\d-\\d\\d_\\d\\d-\\d\\d-\\d\\d))", api.time);
+router.get("/:course/((\\d\\d-\\d\\d-\\d\\d\\d\\d_\\d\\d-\\d\\d-\\d\\d\\d\\d))", api.time);
 
 router.get("/recent/:name", api.recent);
 

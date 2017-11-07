@@ -63,6 +63,8 @@ exports.time = function(req, res) {
 
     let data = {};
     data[courseName] = {};
+    console.log(startDate);
+    console.log(endDate);
 
     db.serialize(() => {
         db.each("SELECT * FROM \"" + req.params.semester + "\" WHERE course = ? AND date >= ? AND date <= ?;", [courseName, startDate, endDate], (err, row) => {

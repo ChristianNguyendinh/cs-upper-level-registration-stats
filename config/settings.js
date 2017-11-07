@@ -19,7 +19,7 @@ module.exports = {
     semesterDates : {
         "201708": { start: "2017-03-30", end: "2017-04-22" },
         "201712": { start: "2017-10-23", end: "2018-01-25" },
-        "201801": { start: "2017-11-01", end: "2018-02-01" },
+        "201801": { start: "2017-10-25", end: "2018-02-01" },
     },
     DROPBOX_TOKEN : "< YOUR TOKEN HERE >",
 };
