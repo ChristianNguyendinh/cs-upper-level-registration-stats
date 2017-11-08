@@ -1,39 +1,42 @@
-ul {
-    list-style-type: none; 
-    margin: 0; 
-    padding: 0; 
-    background-color: #D33; 
-    overflow: hidden;
-    position: relative;
-}
-
-li {
+center {
     float: left;
-    padding: 12px 20px;
     color: white;
-    font-size: 150%;
+    font-size: 130%;
     height: 100%;
     width: 100%;
     border-bottom: 4px solid #0000ff00;
+    margin-top: 15%;
 }
 
-li:hover {
+#navbar {
+    margin: 0; 
+    background-color: #d13232; 
+    overflow: hidden;
+    position: relative;
+    height: 7%;
+    width: 100%;
+}
+
+.nav-div {
+    height: 98%; 
+    display: inline-block; 
+    padding: 0% 2%;
+}
+
+.nav-div:hover {
     background-color: #fff;
     cursor: pointer;
     text-decoration: none;
+}
+
+.nav-div:hover center {
     color: black;
 }
 
-a {
-    height: 100%;
-}
-
-a li:hover {
-    text-decoration: none;
-    color: black;
+.nav-text {
+    vertical-align: super;
 }
 
 .navimg {
-    width: 30px;
-    height: 30px;
+    height: 50%;
 }
