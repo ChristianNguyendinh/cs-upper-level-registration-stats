@@ -138,8 +138,10 @@ function loadData(dataObj, totalSections, dataString, semester) {
     let currDate = new Date();
     let dateString = "";
     let month = currDate.getMonth() + 1;
+    let date = currDate.getDate();
     dateString += month < 10 ? "0" + month.toString() : month.toString();
-    dateString += "-" + currDate.getDate().toString();
+    dateString += "-";
+    dateString += date < 10 ? "0" + date.toString() : date.toString();
     dateString += "-" + currDate.getFullYear().toString();
 
     let curr = 0;
