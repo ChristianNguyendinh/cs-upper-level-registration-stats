@@ -38,6 +38,14 @@ server.get("/help", function(req, res) {
     res.render("help");
 });
 
+// allow Cross Origin Requests
+server.use(function(req, res, next) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
+    res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+    next()
+})
+
 // Get the most recent semester we have data for
 server.get("/api/currentsemester", function(req, res) {
     res.json({ "currentSemester" : config.currentSemester });
@@ -53,7 +61,7 @@ server.get("/api/semesterlist", function(req, res) {
 server.use("/api/:semester(\\d{6})", require("./routes/routes.js"));
 
 // Default port of 8000, can specify env var 'PORT' to change
-server.set("port", (process.env.PORT || 8000));
+server.set("port", (process.env.PORT || 3002));
 
 server.listen(server.get("port"), function() {
     console.log("Server running on port " + server.get("port"));

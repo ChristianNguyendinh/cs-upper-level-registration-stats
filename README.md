@@ -15,6 +15,7 @@ npm run start
 --------------------------  
   
 ### TODO:  
+Dates in settings are wrong, update with new data from server?
 Where do i put this damn legend  
 Once add new semester data - remove hardcoded max min input dates and have it update on semester change  
 different colored labels/ticks/lines for weekends  
