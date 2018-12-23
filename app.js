@@ -4,7 +4,6 @@ Entry point for web application
 
 var express = require("express");
 var server = express();
-var path = require("path");
 var bodyparser = require("body-parser");
 var config = require("./config/settings.js");
 
@@ -13,38 +12,13 @@ server.use(bodyparser.urlencoded({
     extended: true
 }));
 
-// Set static paths (including d3)
-server.set("view engine", "ejs");
-server.use(express.static(path.join(__dirname, "public")));
-server.use("/scripts", express.static(path.join(__dirname, "/node_modules/d3/")));
-
-// Home page
-server.get("/", function(req, res) {
-    res.render("index");
-});
-
-// Main page with querying and charts
-server.get("/charts", function(req, res) {
-    res.render("charts");
-});
-
-// About page. Goal, technology stack, etc.
-server.get("/about", function(req, res) {
-    res.render("about");
-});
-
-// A help page. It's pretty simple tho, not sure if needed
-server.get("/help", function(req, res) {
-    res.render("help");
-});
-
 // allow Cross Origin Requests
 server.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
     res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-    next()
-})
+    next();
+});
 
 // Get the most recent semester we have data for
 server.get("/api/currentsemester", function(req, res) {
